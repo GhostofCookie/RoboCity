@@ -11,7 +11,6 @@
 #include <App.h>
 #include <Core.h>
 #include <Object.h>
-#include <Engine/EngineUI.h>
 
 int App::_width;
 int App::_height;
@@ -77,8 +76,6 @@ void App::Display(void (*lambda)())
 
 	(*lambda)();
 
-	//UI_Panel panel(0, -App::Height(), App::Width(), 300);
-	//panel.Render();
 	glutSwapBuffers();
 }
 
