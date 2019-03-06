@@ -3,6 +3,7 @@
 #endif
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <fbxsdk.h>
 
 #include <stdlib.h>
 #include <stdio.h>    
