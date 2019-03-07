@@ -1,6 +1,5 @@
 #pragma once
 
-#ifdef _WIN32
 namespace fbxsdk
 {
 	class FbxScene;
@@ -29,4 +28,4 @@ private:
 
 };
 
-#endif
+

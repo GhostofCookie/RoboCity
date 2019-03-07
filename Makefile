@@ -5,20 +5,20 @@ BIN_DIR 	= bin/
 CC		= g++ 
 LDFLAGS 	= -Wall
 CPPFLAGS 	= -std=c++11
-CXXFLAGS	= -I $(INC_DIR) -I $(INC_DIR)Objects/ -I $(INC_DIR)fbxsdk/include/
+CXXFLAGS	= -I $(INC_DIR) -I$(INC_DIR)Components/ -I $(INC_DIR)fbxsdk/include/
 
-SRC_FILES 	= $(wildcard $(SRC_DIR)*.cpp) $(wildcard $(SRC_DIR)Objects/*.cpp)
+SRC_FILES 	= $(wildcard $(SRC_DIR)*.cpp) $(wildcard $(SRC_DIR)Components/*.cpp)
 OBJ_FILES 	= $(patsubst $(SRC_DIR)%.cpp,$(BIN_DIR)%.o,$(SRC_FILES))
 
 LIBDIR 		= -L /usr/lib
 FBXSDK_LIB	= $(INC_DIR)fbxsdk/lib/gcc4/x64/release/libfbxsdk.a
-LIBRARIES 	= $(FBXSDK_LIB) -lX11 -lglut -lGL -lGLU -lm
+LIBRARIES 	= $(FBXSDK_LIB) -lX11 -lglut -lGL -lGLU -lm -ldl -lXi -lpthread
 
 app_default 	= Engine
 app 		?= $(app_default)
 
 define cc-bin-build
-$(CC) $(CPPFLAGS) $(CXXFLAGS) $(INC_DIR) -c -o $@ $(LIBDIR) $< $(LIBRARIES)
+$(CC) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $(LIBDIR) $< $(LIBRARIES)
 endef
 
 all: clean-all mkbin build
@@ -38,4 +38,4 @@ clean-all: clean
 	rm -rf $(app) $(app_default)
 
 mkbin:
-	mkdir $(BIN_DIR) $(BIN_DIR)/Objects/
+	mkdir $(BIN_DIR) $(BIN_DIR)/Components/
