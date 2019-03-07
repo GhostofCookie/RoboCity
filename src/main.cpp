@@ -24,6 +24,7 @@ int main(int argc, char** argv)
 void Setup()
 {
    robot = new Robot();
+   robot->SetScale(GLScale(100.f, 100.f, 100.f));
 }
 
 void Display()

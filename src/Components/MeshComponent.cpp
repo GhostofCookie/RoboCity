@@ -28,12 +28,7 @@ GLMesh::GLMesh(GLMesh * m)
 
 void GLMesh::Tick()
 {
-   glLoadIdentity();
-   glPushMatrix();
-   glScalef(100.f, 100.f, 100.f);
-   glColor3f(1.f, 0.f, 0);
    if(_mesh) _mesh->Render();
-   glPopMatrix();
 }
 
 
