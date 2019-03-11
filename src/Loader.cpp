@@ -36,11 +36,14 @@ void FBXLoader::LoadFBX(const char * file)
    char buff[FILENAME_MAX];
    GetCurrentDir(buff, FILENAME_MAX);
    std::string tmp(buff);
+#ifdef _WIN32 
+   tmp.append("/../");
+#else
    tmp.append("/");
+#endif
    tmp.append(file);
    FbxImporter* importer = FbxImporter::Create(manager, "");
    bool bIsInit = importer->Initialize(tmp.c_str(), -1, manager->GetIOSettings());
-   App::PrintToScreen("Loaded", -App::Width(), App::Height()-30, GL_Colour::Green);
 
    if (!bIsInit)
    {

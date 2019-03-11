@@ -2,6 +2,10 @@
 #include <Core.h>
 #include <Robot.h>
 
+#include <string>
+#include <windows.h>
+#include <gl/glu.h>
+
 void Setup();
 void Display();
 void Mouse(int button, int state, int x, int y);
@@ -9,10 +13,11 @@ void Keyboard(unsigned char, int, int) {}
 void MousePassive(int x, int y);
 
 Robot* robot;
+float ez;
 
 int main(int argc, char** argv)
 {
-   App(argc, argv, argv[0], 600, 400);
+   App(argc, argv, argv[0], 980, 720);
    App::RegisterCallbackFuncs(Display, Mouse, NULL, MousePassive);
    App::Init(0.f);
    Setup();
@@ -23,15 +28,16 @@ int main(int argc, char** argv)
 
 void Setup()
 {
-   robot = new Robot();
-   robot->SetScale(GLScale(100.f, 100.f, 100.f));
+	robot = new Robot(0.f, 0.f, -30.f);
+	robot->SetScale(GLScale(1.f));
 }
 
 void Display()
 {
-   App::Display([]() { // Put Your code for displaying objects here.
-	 if(robot) robot->Tick();
-      });
+	App::Display([]() { // Put Your code for displaying objects here.
+		App::PrintToScreen(std::to_string(0).c_str(), 0, 0, GL_Colour::Purple);
+		if (robot) robot->Tick();
+	});
 }
 
 void Mouse(int button, int state, int x, int y)
@@ -41,7 +47,7 @@ void Mouse(int button, int state, int x, int y)
       case  GLUT_LEFT_BUTTON:
 	 if (state == GLUT_DOWN)
 	 {
-
+		 ez += 1;
 	 }
 	 break;
       case GLUT_RIGHT_BUTTON:
@@ -55,6 +61,6 @@ void Mouse(int button, int state, int x, int y)
 
 void MousePassive(int x, int y)
 {
-
+	robot->SetLocation(GLVector(((float)x * 2)-(App::Width()/2), 0, -30.f));
 }
 

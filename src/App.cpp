@@ -27,7 +27,6 @@ App::App(int argc, char** argv, const char* name, int w, int h)
    glutInitWindowSize(_width, _height);
    glutInitWindowPosition(100, 100);
    glutCreateWindow(name);
-   glutSetIconTitle("CoffeeEngine.ico");
 }
 
 void App::Init(float c, GLenum mode)
@@ -89,7 +88,9 @@ void App::Reshape(int w, int h)
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
 
-   glOrtho(-_width, _width, -_height, _height, -1000, 1000);
+   glOrtho(-_width/10, _width/10, -_height/10, _height/10, -1000, 1000);
+   /*** TODO: LOOK INTO THIS ***/
+   //gluPerspective(50.f, w / h, 1, 100);
 
    glMatrixMode(GL_MODELVIEW);
    _width = w;

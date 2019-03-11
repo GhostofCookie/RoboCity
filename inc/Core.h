@@ -35,6 +35,9 @@ private:
 	float R, G, B, A;
 };
 
+/**
+ * Creates a font recognizable by GLUT but more Human Readable.
+ */
 struct GL_Font
 {
 public:
@@ -47,16 +50,23 @@ private:
 	int index;
 };
 
+/**
+ * Creates a vector which is used to define locational information about an Object.
+ */
 struct GLVector
 {
 public:
 	GLVector();
+	GLVector(GLVector*);
 	GLVector(float, float);
 	GLVector(float, float, float);
 		
 	float X, Y, Z;
 };
 
+/**
+ * Creates a vector which is used to define rotational information about an Object.
+ */
 struct GLRotator
 {
 public:
@@ -71,15 +81,25 @@ public:
 	float Angle;
 };
 
+
+/**
+ * Creates a vector which is used to define Object scale.
+ */
 struct GLScale
 {
+public:
 	GLScale();
 	GLScale(GLScale*);
+	GLScale(float);
 	GLScale(float, float, float);
 
 	float X, Y, Z;
 };
 
+
+/**
+ * Creates a structure which contains location, rotation, and scale data.
+ */
 struct GLTransform
 {
 public:
@@ -99,6 +119,5 @@ private:
 	GLVector	_location;
 	GLRotator	_rotation;
 	GLScale		_scale;
-
 };
 

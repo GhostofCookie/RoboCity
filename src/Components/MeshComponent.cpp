@@ -1,13 +1,6 @@
 #include <Components/MeshComponent.h>
-#ifdef _WIN32
-#include <windows.h>
-#endif
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
-#include <Loader.h>
-
 #include <Core.h>
+#include <Loader.h>
 
 GLMesh::GLMesh()
    :_material{ new GL_Colour(GL_Colour::White) }
