@@ -9,6 +9,7 @@ GLMesh::GLMesh()
 }
 
 GLMesh::GLMesh(const char * file)
+   :_material{ new GL_Colour(GL_Colour::White) }
 {
    _mesh = new FBXLoader(file);
 }
@@ -21,7 +22,18 @@ GLMesh::GLMesh(GLMesh * m)
 
 void GLMesh::Tick()
 {
+   if(_material) _material->UseColour();
    if(_mesh) _mesh->Render();
+}
+
+void GLMesh::SetMaterial(const GL_Colour& m)
+{
+   if(_material)
+   {
+      delete _material;
+      _material = nullptr;
+   }
+   _material = new GL_Colour(m);
 }
 
 
@@ -32,7 +44,12 @@ GLMeshComponent::GLMeshComponent()
 
 void GLMeshComponent::Tick()
 {
-   if (_mesh) _mesh->Tick();
+   if (_mesh)
+   {
+      StartRender();
+      _mesh->Tick();
+      EndRender();
+   }
 }
 
 void GLMeshComponent::SetMesh(GLMesh* m)
@@ -43,4 +60,9 @@ void GLMeshComponent::SetMesh(GLMesh* m)
 GLMesh* GLMeshComponent::GetMesh() const
 {
    return _mesh;
+}
+
+void GLMeshComponent::SetMaterial(const GL_Colour& m)
+{
+   if(_mesh) _mesh->SetMaterial(m);
 }

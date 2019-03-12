@@ -3,8 +3,6 @@
 #include <Robot.h>
 
 #include <string>
-#include <windows.h>
-#include <gl/glu.h>
 
 void Setup();
 void Display();
@@ -28,16 +26,17 @@ int main(int argc, char** argv)
 
 void Setup()
 {
-	robot = new Robot(0.f, 0.f, -30.f);
-	robot->SetScale(GLScale(1.f));
+   robot = new Robot(0.f, 0.f, -30.f);
+   robot->SetScale(GLScale(1.f));
 }
 
 void Display()
 {
-	App::Display([]() { // Put Your code for displaying objects here.
-		App::PrintToScreen(std::to_string(0).c_str(), 0, 0, GL_Colour::Purple);
-		if (robot) robot->Tick();
-	});
+   App::Display([]() { // Put Your code for displaying objects here.
+	 if (robot) robot->Tick();
+	 robot->Rotate(GLRotator(0.f, 1.f, 0.f));
+	 robot->Translate(GLVector(0.f, 0.01f, 0.f));
+      });
 }
 
 void Mouse(int button, int state, int x, int y)
@@ -47,7 +46,7 @@ void Mouse(int button, int state, int x, int y)
       case  GLUT_LEFT_BUTTON:
 	 if (state == GLUT_DOWN)
 	 {
-		 ez += 1;
+	    ez += 1;
 	 }
 	 break;
       case GLUT_RIGHT_BUTTON:
@@ -61,6 +60,6 @@ void Mouse(int button, int state, int x, int y)
 
 void MousePassive(int x, int y)
 {
-	robot->SetLocation(GLVector(((float)x * 2)-(App::Width()/2), 0, -30.f));
+   robot->SetLocation(GLVector(((float)x * 2)-(App::Width()/2), 0, -30.f));
 }
 

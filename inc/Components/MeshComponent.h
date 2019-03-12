@@ -12,12 +12,14 @@ public:
 
 	void Tick();
 
+	void SetMaterial(const struct GL_Colour&);
+
 private:
-	struct GL_Colour* _material;
+	GL_Colour* _material;
 	class FBXLoader* _mesh;
 };
 
-class GLMeshComponent
+class GLMeshComponent : public Object
 {
 public:
 	GLMeshComponent();
@@ -28,7 +30,9 @@ public:
 	void SetMesh(GLMesh*);
 
 	GLMesh* GetMesh() const;
+	
+	void SetMaterial(const struct GL_Colour&);
 
-private:
+  private:
 	GLMesh* _mesh;
 };
