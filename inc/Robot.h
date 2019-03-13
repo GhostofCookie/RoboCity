@@ -13,7 +13,7 @@ class Robot : public Object
    void SetMeshes();
    
   private:
-   class GLMeshComponent* _body, *_head, *_neck, *antenna, *_arms, *_legs;
+   class GLMeshComponent* _body, *_head, *_neck, *_antenna, *_arms, *_legs;
    struct GL_Colour* _material;
    
 };

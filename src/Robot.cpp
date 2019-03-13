@@ -45,7 +45,6 @@ void Robot::SetMeshes()
       _body->SetScale(GLScale(10.f, 20.f, 10.f));
       _body->SetMaterial(GL_Colour::Red);
    }
-
    
    _neck = new GLMeshComponent();
    if(_neck)
@@ -55,7 +54,6 @@ void Robot::SetMeshes()
       _neck->SetScale(GLScale(5.f, 2.f, 5.f));
       _neck->SetMaterial(GL_Colour::Cyan);
    }
-
    
    _head = new GLMeshComponent();
    if(_head)
@@ -66,11 +64,28 @@ void Robot::SetMeshes()
       _head->SetMaterial(GL_Colour::Blue);
    }
 
+   _antenna = new GLMeshComponent();
+   if(_antenna)
+   {
+      _antenna->SetMesh(new GLMesh("Meshes/cube.fbx"));
+      _antenna->SetLocation(GLVector(0, 0, 0));
+      _antenna->SetScale(GLScale(0.f));
+   }
    
-   /*
    _arms = new GLMeshComponent();
-   _arms->SetMesh(new GLMesh("Meshes/cube.fbx"));
-   _arms->SetLocation(GLVector(0, 0, 0));
-   _arms->SetScale(GLScale(0.f));
-   */
+   if(_arms)
+   {
+      _arms->SetMesh(new GLMesh("Meshes/cube.fbx"));
+      _arms->SetLocation(GLVector(0, 0, 0));
+      _arms->SetScale(GLScale(0.f));
+   }
+  
+   _legs = new GLMeshComponent();
+   if(_legs)
+   {
+      _legs->SetMesh(new GLMesh("Meshes/cube.fbx"));
+      _legs->SetLocation(GLVector(0, 0, 0));
+      _legs->SetScale(GLScale(0.f));
+   }
+   
 }

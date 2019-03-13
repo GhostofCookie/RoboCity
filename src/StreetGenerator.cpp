@@ -1,4 +1,6 @@
+#ifdef _WIN32
 #include "pch.h" // Windows
+#endif
 #include <cstdlib>
 #include <ctime>
 #include "StreetGenerator.h"
