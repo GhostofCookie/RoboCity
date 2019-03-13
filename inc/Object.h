@@ -85,16 +85,16 @@ public:
 	virtual void Rotate(float theta, GLVector v1, GLVector v2);
 
 	/** Returns the object's current location. */
-	GLVector GetLocation();
-
+	const GLVector& GetLocation();
+	
 	/** Returns the object's current rotation. */
-	GLRotator GetRotation();
+	const GLRotator& GetRotation();
 
 	/** Returns the object's current scale. */
-	GLScale GetScale();
+	const GLScale& GetScale();
 
 	/** Returns the object's current transform. */
-	GLTransform GetTransform();
+	const GLTransform& GetTransform();
 
 protected:
 	/** Helper function which holds the logic for setting up the object's model. */

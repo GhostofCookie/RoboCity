@@ -35,7 +35,7 @@ void Display()
    App::Display([]() { // Put Your code for displaying objects here.
 	 if (robot) robot->Tick();
 	 robot->Rotate(GLRotator(0.f, 1.f, 0.f));
-	 robot->Translate(GLVector(0.f, 0.01f, 0.f));
+//	 robot->Translate(GLVector(0.f, 0.01f, 0.f));
       });
 }
 

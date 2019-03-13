@@ -24,13 +24,13 @@ void Robot::Tick()
    if (_body && _neck && _head)
    {
       StartRender();
-      _body->Translate(GetLocation());
-      _head->Translate(GetLocation());
-      _neck->Translate(GetLocation());
+      _body->SetLocation(GetLocation()+_body->GetLocation());
+      _head->SetLocation(GetLocation());
+      _neck->SetLocation(GetLocation());
       
-      _body->Rotate(GetRotation());
-      _head->Rotate(GetRotation());
-      _neck->Rotate(GetRotation());
+      _body->SetRotation(GetRotation());
+      _head->SetRotation(GetRotation());
+      _neck->SetRotation(GetRotation());
       EndRender();
    }
 }
