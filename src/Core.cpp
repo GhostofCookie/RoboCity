@@ -74,7 +74,7 @@ GLVector::GLVector(float x, float y)
 GLVector::GLVector(float x, float y, float z)
    : X{ x }, Y{ y }, Z{ z } {}
 
-GLVector& GLVector::operator+=(const GLVector& v);
+const GLVector& GLVector::operator+=(const GLVector& v)
 {
    this->X += v.X;
    this->Y += v.Y;
@@ -82,10 +82,9 @@ GLVector& GLVector::operator+=(const GLVector& v);
    return *this;
 }
 
-const GLVector GLVector::operator+(const GLVector& v, const GLVector& l)
+const GLVector operator+(const GLVector& v, const GLVector& l)
 {
-   l += v;
-   return l;
+   return GLVector(v.X + l.X, v.Y + l.Y, v.Z + l.Z);
 }
 
 /////////////////////////////////////////////////////////////////////////

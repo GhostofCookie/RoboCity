@@ -23,16 +23,46 @@ void Robot::Tick()
 {
    if (_body && _neck && _head)
    {
-      StartRender();
-      _body->SetLocation(GetLocation()+_body->GetLocation());
-      _head->SetLocation(GetLocation());
-      _neck->SetLocation(GetLocation());
-      
-      _body->SetRotation(GetRotation());
-      _head->SetRotation(GetRotation());
-      _neck->SetRotation(GetRotation());
-      EndRender();
+	   StartRender();
+	   _antenna->Rotate(GLRotator(0.f, 30.f, 0.f));
+	   EndRender();
    }
+}
+
+void Robot::Translate(GLVector loc)
+{
+	Object::Translate(loc);
+	_body->Translate(loc);
+	_head->Translate(loc);
+	_eyes->Translate(loc);
+	_neck->Translate(loc);
+	_arms->Translate(loc);
+	_legs->Translate(loc);
+	_antenna->Translate(loc);
+}
+
+void Robot::Rotate(GLRotator rot)
+{
+	Object::Rotate(rot);
+	_body->Rotate(rot);
+	_head->Rotate(rot);
+	_eyes->Rotate(rot);
+	_neck->Rotate(rot);
+	_arms->Rotate(rot);
+	_legs->Rotate(rot);
+	_antenna->Rotate(rot);
+}
+
+void Robot::SetScale(GLScale sca)
+{
+	Object::SetScale(sca);
+	_body->SetScale(sca);
+	_head->SetScale(sca);
+	_eyes->SetScale(sca);
+	_neck->SetScale(sca);
+	_arms->SetScale(sca);
+	_legs->SetScale(sca);
+	_antenna->SetScale(sca);
 }
 
 void Robot::SetMeshes()
@@ -40,52 +70,48 @@ void Robot::SetMeshes()
    _body = new GLMeshComponent();
    if(_body)
    {
-      _body->SetMesh(new GLMesh("Meshes/cube.fbx"));
-      _body->SetLocation(GLVector(0, 0, 0));
-      _body->SetScale(GLScale(10.f, 20.f, 10.f));
+      _body->SetMesh(new GLMesh("Meshes/Body.fbx"));
       _body->SetMaterial(GL_Colour::Red);
    }
    
    _neck = new GLMeshComponent();
    if(_neck)
    {
-      _neck->SetMesh(new GLMesh("Meshes/cube.fbx"));
-      _neck->SetLocation(GLVector(0, 22.f, 0));
-      _neck->SetScale(GLScale(5.f, 2.f, 5.f));
+      _neck->SetMesh(new GLMesh("Meshes/Neck.fbx"));
       _neck->SetMaterial(GL_Colour::Cyan);
    }
    
    _head = new GLMeshComponent();
    if(_head)
    {
-      _head->SetMesh(new GLMesh("Meshes/sphere.fbx"));
-      _head->SetLocation(GLVector(0, 34, 0));
-      _head->SetScale(GLScale(15.f));
+      _head->SetMesh(new GLMesh("Meshes/Head.fbx"));
       _head->SetMaterial(GL_Colour::Blue);
+   }
+
+   _eyes = new GLMeshComponent();
+   if (_eyes)
+   {
+	   _eyes->SetMesh(new GLMesh("Meshes/Eyes.fbx"));
+	   _eyes->SetMaterial(GL_Colour::White);
    }
 
    _antenna = new GLMeshComponent();
    if(_antenna)
    {
-      _antenna->SetMesh(new GLMesh("Meshes/cube.fbx"));
-      _antenna->SetLocation(GLVector(0, 0, 0));
-      _antenna->SetScale(GLScale(0.f));
+      _antenna->SetMesh(new GLMesh("Meshes/Antenna.fbx"));
+	  _antenna->SetMaterial(GL_Colour::Green);
    }
    
    _arms = new GLMeshComponent();
    if(_arms)
    {
       _arms->SetMesh(new GLMesh("Meshes/cube.fbx"));
-      _arms->SetLocation(GLVector(0, 0, 0));
-      _arms->SetScale(GLScale(0.f));
    }
   
    _legs = new GLMeshComponent();
    if(_legs)
    {
       _legs->SetMesh(new GLMesh("Meshes/cube.fbx"));
-      _legs->SetLocation(GLVector(0, 0, 0));
-      _legs->SetScale(GLScale(0.f));
    }
    
 }

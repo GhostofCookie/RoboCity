@@ -61,8 +61,8 @@ public:
    GLVector(float, float);
    GLVector(float, float, float);
 
-   GLVector& operator+=(const GLVector& v);
-   friend const GLVector operator+(const GLVector& v, const GLVector& l);
+   const GLVector& operator+=(const GLVector&);
+   friend const GLVector operator+(const GLVector&, const GLVector&);
 		
    float X, Y, Z;
 };

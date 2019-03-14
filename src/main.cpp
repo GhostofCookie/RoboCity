@@ -27,15 +27,12 @@ int main(int argc, char** argv)
 void Setup()
 {
    robot = new Robot(0.f, 0.f, -30.f);
-   robot->SetScale(GLScale(1.f));
+   robot->SetScale(GLScale(0.5f));
 }
 
 void Display()
 {
    App::Display([]() { // Put Your code for displaying objects here.
-	 if (robot) robot->Tick();
-	 robot->Rotate(GLRotator(0.f, 1.f, 0.f));
-//	 robot->Translate(GLVector(0.f, 0.01f, 0.f));
       });
 }
 
