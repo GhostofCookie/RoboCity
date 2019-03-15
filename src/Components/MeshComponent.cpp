@@ -20,6 +20,8 @@ GLMesh::GLMesh(const GLMesh& m)
 GLMesh::GLMesh(GLMesh * m)
    : _mesh{ m->_mesh }, _material{ m->_material } {}
 
+GLMesh::~GLMesh() { delete _mesh; delete _material;}
+
 void GLMesh::Tick()
 {
    if(_material) _material->UseColour();

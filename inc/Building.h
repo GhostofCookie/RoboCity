@@ -4,17 +4,20 @@
 
 class Building : public Object
 {
-public:
-	Building();
-	~Building();
+  public:
+   Building();
+   ~Building();
 
-	bool CanTakeDamage() const;
+   virtual void Tick();
 
-	void TakeDamage(float Delta);
+   bool CanTakeDamage() const;
 
-private:
-	float _health, _max_health;
-	class GLMeshComponent* _mesh;
-	struct GL_Colour* _material;
+   void TakeDamage(float Delta);
+   void SetMaterial(struct GL_Colour);
+
+  private:
+   float _health, _max_health;
+   class GLMeshComponent* _mesh;
+   GL_Colour* _material;
 
 };

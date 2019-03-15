@@ -19,6 +19,7 @@ public:
    explicit GL_Colour(float, float, float);
    explicit GL_Colour(float, float, float, float);
    GL_Colour(const GL_Colour& c);
+   ~GL_Colour() {}
    void UseColour();
 
    static const GL_Colour Black;
@@ -30,9 +31,12 @@ public:
    static const GL_Colour Cyan;
    static const GL_Colour Emerald;
    static const GL_Colour Purple;
+   static const GL_Colour Yellow;
+   static const GL_Colour Orange;
 
-private:
+public:
    float R, G, B, A;
+   float RGBA[4];
 };
 
 /**
@@ -60,6 +64,7 @@ public:
    GLVector(GLVector*);
    GLVector(float, float);
    GLVector(float, float, float);
+   ~GLVector() {}
 
    const GLVector& operator+=(const GLVector&);
    friend const GLVector operator+(const GLVector&, const GLVector&);
@@ -80,6 +85,7 @@ public:
    GLRotator(float, float, float);
    GLRotator(float, float, float, float, float, float);
    GLRotator(GLVector v1, GLVector v2);
+   ~GLRotator() {}
 		
    float X, Y, Z;
    float Angle;
@@ -96,6 +102,7 @@ public:
    GLScale(GLScale*);
    GLScale(float);
    GLScale(float, float, float);
+   ~GLScale() {}
 
    float X, Y, Z;
 };

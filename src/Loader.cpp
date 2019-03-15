@@ -26,6 +26,10 @@ FBXLoader::FBXLoader(FBXLoader * fbxl)
 {
 }
 
+FBXLoader::~FBXLoader()
+{
+}
+
 void FBXLoader::LoadFBX(const char * file)
 {
    FbxManager* manager = FbxManager::Create();

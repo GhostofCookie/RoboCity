@@ -9,6 +9,7 @@ public:
 	GLMesh(const char*);
 	GLMesh(const GLMesh&);
 	GLMesh(GLMesh*);
+	~GLMesh();
 
 	void Tick();
 

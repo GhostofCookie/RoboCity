@@ -22,6 +22,8 @@ const GL_Colour GL_Colour::Blue(0.f, 0.f, 1.f);
 const GL_Colour GL_Colour::Cyan(0.f, 0.8f, 1.f);
 const GL_Colour GL_Colour::Emerald(0.f, 1.f, 0.5f);
 const GL_Colour GL_Colour::Purple(0.35f, 0.f, 1.f);
+const GL_Colour GL_Colour::Yellow(1.f, 1.f, 0.f);
+const GL_Colour GL_Colour::Orange(1.f, 0.54f, 0.f);
 
 GL_Colour::GL_Colour(float r, float g, float b)
    : R{ std::fmod(r, 2.f) }, G{ std::fmod(g, 2.f) }, B{ std::fmod(b, 2.f) }, A{ 1.f } {}

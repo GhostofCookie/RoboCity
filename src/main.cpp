@@ -1,6 +1,7 @@
 #include <App.h>
 #include <Core.h>
 #include <Robot.h>
+#include <Building.h>
 
 #include <string>
 
@@ -11,7 +12,7 @@ void Keyboard(unsigned char, int, int) {}
 void MousePassive(int x, int y);
 
 Robot* robot;
-float ez;
+Building* b;
 
 int main(int argc, char** argv)
 {
@@ -28,6 +29,9 @@ void Setup()
 {
    robot = new Robot(0.f, 0.f, -30.f);
    robot->SetScale(GLScale(0.5f));
+
+   b = new Building();
+   b->SetScale(GLScale(10.f));
 }
 
 void Display()
@@ -43,7 +47,7 @@ void Mouse(int button, int state, int x, int y)
       case  GLUT_LEFT_BUTTON:
 	 if (state == GLUT_DOWN)
 	 {
-	    ez += 1;
+	    
 	 }
 	 break;
       case GLUT_RIGHT_BUTTON:
@@ -57,6 +61,6 @@ void Mouse(int button, int state, int x, int y)
 
 void MousePassive(int x, int y)
 {
-   robot->SetLocation(GLVector(((float)x * 2)-(App::Width()/2), 0, -30.f));
+   
 }
 
