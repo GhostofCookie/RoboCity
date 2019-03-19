@@ -27,16 +27,15 @@ int main(int argc, char** argv)
 
 void Setup()
 {
-   robot = new Robot(0.f, 0.f, -30.f);
-   robot->SetScale(GLScale(0.5f));
-
-   b = new Building();
-   b->SetScale(GLScale(10.f));
+	 robot = new Robot(0.f, 0.f, -30.f);
+	 robot->SetScale(GLScale(0.5f));
 }
 
 void Display()
 {
    App::Display([]() { // Put Your code for displaying objects here.
+	 /*  std::string str = std::to_string(b->GetHealth());
+	   App::PrintToScreen(str.c_str(), 0, 0, GL_Colour::Emerald);*/
       });
 }
 
@@ -47,14 +46,18 @@ void Mouse(int button, int state, int x, int y)
       case  GLUT_LEFT_BUTTON:
 	 if (state == GLUT_DOWN)
 	 {
-	    
+		 robot->RotateHead(30.f);
 	 }
+	 else
+		 robot->RotateHead(-30.f);
 	 break;
       case GLUT_RIGHT_BUTTON:
 	 if (state == GLUT_DOWN)
 	 {
-
+		 robot->RotateHead(-30.f);
 	 }
+	 else
+		 robot->RotateHead(30.f);
 	 break;
    }
 }

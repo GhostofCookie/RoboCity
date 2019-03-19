@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 struct GLVector;
 struct GLRotator;
 struct GLScale;
@@ -96,6 +98,8 @@ public:
 	/** Returns the object's current transform. */
 	const GLTransform& GetTransform();
 
+	void AddChild(Object*);
+
 protected:
 	/** Helper function which holds the logic for setting up the object's model. */
 	virtual void StartRender();
@@ -104,6 +108,7 @@ protected:
 	virtual void EndRender();
 
 protected:
+	std::vector<Object*> _children;
 	GLTransform* _transform;
 	float _angle;
 	

@@ -56,6 +56,11 @@ void GLMeshComponent::Tick()
 
 void GLMeshComponent::SetMesh(GLMesh* m)
 {
+	if (_mesh)
+	{
+		delete _mesh;
+		_mesh = nullptr;
+	}
    _mesh = m;
 }
 

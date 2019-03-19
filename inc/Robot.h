@@ -7,9 +7,9 @@ class Robot : public Object
    Robot(float x, float y, float z);
    virtual ~Robot();
    virtual void Tick();
-   virtual void Translate(GLVector) override;
-   virtual void Rotate(GLRotator) override;
-   virtual void SetScale(GLScale) override;
+
+   void MoveForward(float);
+   void RotateHead(float);
 
   private:
    void SetMeshes();

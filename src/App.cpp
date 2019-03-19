@@ -72,7 +72,7 @@ void App::Display(void (*lambda)())
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
    for (auto it = _object_pool.begin(); it != _object_pool.end(); ++it)
-      (*it)->Tick();
+      if(*it) (*it)->Tick();
 
    (*lambda)();
 
@@ -101,7 +101,7 @@ void App::PrintToScreen(const char * str, float x, float y, GL_Font font, GL_Col
 {
    glDisable(GL_LIGHTING);
    colour.UseColour();
-   glRasterPos2f(x, y);
+   glRasterPos3f(x, y, 1000);
    int len = strlen(str);
    for (int i = 0; i < len; i++)
       glutBitmapCharacter(font.GetFont(), *str++);
@@ -116,5 +116,16 @@ void App::PrintToScreen(const char* str, float x, float y, GL_Colour colour)
 void App::AddObjectToPool(Object* obj)
 {
    _object_pool.push_back(obj);
+}
+
+void App::RemoveObject(Object * obj)
+{
+	if(obj)
+		for(auto it = _object_pool.begin(); it != _object_pool.end(); ++it)
+			if (*it == obj)
+			{
+				_object_pool.erase(it);
+				break;
+			}
 }
 

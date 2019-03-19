@@ -74,12 +74,14 @@ class App
     */
    static void AddObjectToPool(class Object* obj);
 
+   static void RemoveObject(Object*);
+
   private:
    static int _width;
    static int _height;
    static std::vector<Object*> _object_pool;
 
-   typedef void(*__gl_void_ii	)(int, int);
+   typedef void(*__gl_void_ii  )(int, int);
    typedef void(*__gl_void_iiii)(int, int, int, int);
    typedef void(*__gl_void_ucii)(unsigned char, int, int);
 };

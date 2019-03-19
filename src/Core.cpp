@@ -89,6 +89,11 @@ const GLVector operator+(const GLVector& v, const GLVector& l)
    return GLVector(v.X + l.X, v.Y + l.Y, v.Z + l.Z);
 }
 
+const GLVector operator*(const GLVector& v, const float& d)
+{
+	return GLVector(v.X * d, v.Y * d, v.Z * d);
+}
+
 /////////////////////////////////////////////////////////////////////////
 // Rotators
 /////////////////////////////////////////////////////////////////////////
@@ -102,7 +107,9 @@ GLRotator::GLRotator(float d)
 
 GLRotator::GLRotator(float x, float y, float z)
    : X{ x > 1 ? x / x : x }, Y{ y > 1 ? y / y : y }, Z{ z > 1 ? z / z : z },
-   Angle{ std::fmod(std::abs(x) + std::abs(y) + std::abs(z), 360.f) } {}
+   Angle{ std::fmod(std::abs(x) + std::abs(y) + std::abs(z), 360.f) } 
+{
+}
 
 GLRotator::GLRotator(float x1, float y1, float z1, float x2, float y2, float z2)
    : X{ (x2 - x1) }, Y{ (y2 - y1) }, Z{ (z2 - z1) } {}

@@ -14,6 +14,7 @@ class Building : public Object
 
    void TakeDamage(float Delta);
    void SetMaterial(struct GL_Colour);
+   float GetHealth() const;
 
   private:
    float _health, _max_health;

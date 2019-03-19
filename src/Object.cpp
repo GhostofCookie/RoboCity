@@ -25,32 +25,52 @@ Object::Object(float x, float y, float z)
    App::AddObjectToPool(this);
 }
 
-Object::~Object() { delete _transform; }
+Object::~Object() 
+{ 
+	delete _transform; 
+	for (int i = 1; i < _children.size(); i++)
+	{
+		if (_children[i]) delete _children[i];
+		_children.pop_back();
+	}
+	App::RemoveObject(this);
+
+}
 
 void Object::SetLocation(GLVector loc)
 {
    _transform->SetLocation(loc);
+   for (auto obj : _children)
+	   obj->SetLocation(loc);
 }
 
 void Object::SetLocation(float x, float y, float z)
 {
    SetLocation(GLVector(x, y, z));
+   for (auto obj : _children)
+	   obj->SetLocation(GLVector(x, y, z));
 }
 
 void Object::SetRotation(GLRotator rotation)
 {
    _transform->SetRotation(rotation);
+   for (auto obj : _children)
+	   obj->SetRotation(rotation);
    _angle = _transform->GetRotation().Angle;
 }
 
 void Object::SetRotation(float x, float y, float z)
 {
    SetRotation(GLRotator(x, y, z));
+   for (auto obj : _children)
+	   obj->SetRotation(GLRotator(x, y, z));
 }
 
 void Object::SetScale(GLScale scale)
 {
    _transform->SetScale(&scale);
+   for (auto obj : _children)
+	   obj->SetScale(&scale);
 }
 
 void Object::SetScale(float x, float y, float z)
@@ -64,18 +84,29 @@ void Object::Translate(GLVector v)
       _transform->GetRotation().X + v.X,
       _transform->GetLocation().Y + v.Y,
       _transform->GetLocation().Z + v.Z);
+
+   for (auto obj : _children)
+	   obj->SetLocation(
+	   _transform->GetRotation().X + v.X,
+	   _transform->GetLocation().Y + v.Y,
+	   _transform->GetLocation().Z + v.Z);
 }
 
 void Object::Translate(float x, float y, float z)
 {
-   SetLocation(GLVector(
-		  _transform->GetLocation().X + x,
-		  _transform->GetLocation().Y + y,
-		  _transform->GetLocation().Z + z));
+	GLVector l(
+		_transform->GetLocation().X + x,
+		_transform->GetLocation().Y + y,
+		_transform->GetLocation().Z + z);
+   SetLocation(l);
+	for (auto obj : _children)
+		obj->SetLocation(l);
 }
 
 void Object::Rotate(GLRotator r)
 {
+	for (auto obj : _children)
+		obj->Rotate(r);
    _transform->SetRotation(r);
    _angle = std::fmod(_angle + _transform->GetRotation().Angle, 360.f);
 }
@@ -85,6 +116,8 @@ void Object::Rotate(float theta, GLVector v1, GLVector v2)
 {
    _angle = std::fmod(_angle + theta, 360.f);
    _transform->SetRotation(GLRotator(v1, v2));
+   for (auto obj : _children)
+	   obj->Rotate(theta, v1, v2);
 }
 
 const GLVector& Object::GetLocation()
@@ -105,6 +138,11 @@ const GLScale& Object::GetScale()
 const GLTransform& Object::GetTransform()
 {
    return *_transform;
+}
+
+void Object::AddChild(Object * obj)
+{
+	if(obj) _children.push_back(obj);
 }
 
 void Object::StartRender()
