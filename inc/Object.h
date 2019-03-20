@@ -82,9 +82,8 @@ public:
 	/** Rotate the object.
 	 * @param The angle of rotation from the current rotation.
 	 * @param The first vector endpoint.
-	 * @param The last vector endpoint.
 	 */
-	virtual void Rotate(float theta, GLVector v1, GLVector v2);
+	virtual void Rotate(float theta, GLRotator v1);
 
 	/** Returns the object's current location. */
 	const GLVector& GetLocation();

@@ -82,9 +82,7 @@ struct GLRotator
 public:
    GLRotator();
    GLRotator(GLRotator*);
-   GLRotator(float);
    GLRotator(float, float, float);
-   GLRotator(float, float, float, float, float, float);
    GLRotator(GLVector v1, GLVector v2);
    ~GLRotator() {}
 		

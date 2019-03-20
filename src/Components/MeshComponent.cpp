@@ -20,7 +20,7 @@ GLMesh::GLMesh(const GLMesh& m)
 GLMesh::GLMesh(GLMesh * m)
    : _mesh{ m->_mesh }, _material{ m->_material } {}
 
-GLMesh::~GLMesh() { delete _mesh; delete _material;}
+GLMesh::~GLMesh() { if(_mesh) delete _mesh; if(_material) delete _material;}
 
 void GLMesh::Tick()
 {
@@ -32,7 +32,7 @@ void GLMesh::SetMaterial(const GL_Colour& m)
 {
    if(_material)
    {
-      delete _material;
+      //delete _material;
       _material = nullptr;
    }
    _material = new GL_Colour(m);
@@ -58,8 +58,8 @@ void GLMeshComponent::SetMesh(GLMesh* m)
 {
 	if (_mesh)
 	{
-		delete _mesh;
-		_mesh = nullptr;
+	   //delete _mesh;
+	   _mesh = nullptr;
 	}
    _mesh = m;
 }

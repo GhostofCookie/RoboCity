@@ -26,14 +26,14 @@ void Robot::Tick()
 
 void Robot::MoveForward(float Delta)
 {
-	_antenna->Rotate(GLRotator(0.f, 30.f, 0.f));
-	GLVector fv(GetRotation().X, GetRotation().Y, GetRotation().Z);
-	Translate(fv * Delta);
+   _antenna->Rotate(GLRotator(0.f, 30.f, 0.f));
+   GLVector fv(GetRotation().X, GetRotation().Y, GetRotation().Z);
+   Translate(fv * Delta);
 }
 
 void Robot::RotateHead(float theta)
 {
-	_neck->Rotate(GLRotator(0.f, theta, 0.f));
+   _neck->Rotate(theta, GLRotator(0.f, 1.f, 0.f));
 }
 
 
@@ -60,7 +60,7 @@ void Robot::SetMeshes()
    {
       _head->SetMesh(new GLMesh("Meshes/Head.fbx"));
       _head->SetMaterial(GL_Colour::Blue);
-	  _neck->AddChild(_head);
+      _neck->AddChild(_head);
    }
 
    _eyes = new GLMeshComponent();
@@ -91,6 +91,6 @@ void Robot::SetMeshes()
    {
       _legs->SetMesh(new GLMesh("Meshes/cube.fbx"));
 	  AddChild(_legs);
-   }
+	  }
    
 }

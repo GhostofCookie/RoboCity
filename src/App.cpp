@@ -120,12 +120,12 @@ void App::AddObjectToPool(Object* obj)
 
 void App::RemoveObject(Object * obj)
 {
-	if(obj)
-		for(auto it = _object_pool.begin(); it != _object_pool.end(); ++it)
-			if (*it == obj)
-			{
-				_object_pool.erase(it);
-				break;
-			}
+   if(obj)
+      for(auto it = _object_pool.begin(); it != _object_pool.end(); ++it)
+	 if (*it == obj)
+	 {
+	    _object_pool.erase(it);
+	    break;
+	 }
 }
 

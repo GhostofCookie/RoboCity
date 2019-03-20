@@ -102,17 +102,13 @@ GLRotator::GLRotator() {}
 GLRotator::GLRotator(GLRotator * rot)
    : X{ rot->X }, Y{ rot->Y }, Z{ rot->Z }, Angle{ rot->Angle } {}
 
-GLRotator::GLRotator(float d)
-   : X{ d }, Y{ d }, Z{ d } {}
-
 GLRotator::GLRotator(float x, float y, float z)
-   : X{ x > 1 ? x / x : x }, Y{ y > 1 ? y / y : y }, Z{ z > 1 ? z / z : z },
+   : X{ x > 0 ? x / x : x != 0 ? x/-x : 0},
+   Y{ y > 0 ? y / y : y != 0 ? y/-y : 0},
+   Z{ z > 0 ? z / z : z != 0 ? z/-z : 0},
    Angle{ std::fmod(std::abs(x) + std::abs(y) + std::abs(z), 360.f) } 
 {
 }
-
-GLRotator::GLRotator(float x1, float y1, float z1, float x2, float y2, float z2)
-   : X{ (x2 - x1) }, Y{ (y2 - y1) }, Z{ (z2 - z1) } {}
 
 GLRotator::GLRotator(GLVector v1, GLVector v2)
    : X{ v2.X - v1.X }, Y{ v2.Y - v1.Y }, Z{ v2.Z - v1.Z } {}

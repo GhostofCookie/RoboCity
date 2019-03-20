@@ -1,7 +1,7 @@
 #include <App.h>
 #include <Core.h>
 #include <Robot.h>
-#include <Building.h>
+//#include <Building.h>
 
 #include <string>
 
@@ -12,7 +12,6 @@ void Keyboard(unsigned char, int, int) {}
 void MousePassive(int x, int y);
 
 Robot* robot;
-Building* b;
 
 int main(int argc, char** argv)
 {
@@ -27,8 +26,8 @@ int main(int argc, char** argv)
 
 void Setup()
 {
-	 robot = new Robot(0.f, 0.f, -30.f);
-	 robot->SetScale(GLScale(0.5f));
+   robot = new Robot(0.f, 0.f, -30.f);
+   robot->SetScale(GLScale(0.5f));
 }
 
 void Display()
@@ -59,7 +58,7 @@ void Mouse(int button, int state, int x, int y)
 	 else
 		 robot->RotateHead(30.f);
 	 break;
-   }
+	 }
 }
 
 void MousePassive(int x, int y)
