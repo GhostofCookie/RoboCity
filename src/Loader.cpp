@@ -13,6 +13,7 @@
 
 FBXLoader::FBXLoader(const char * file)
 {
+   mesh_scene = nullptr;
    LoadFBX(file);
 }
 

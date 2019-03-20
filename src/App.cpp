@@ -72,7 +72,7 @@ void App::Display(void (*lambda)())
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
    for (auto it = _object_pool.begin(); it != _object_pool.end(); ++it)
-      if(*it) (*it)->Tick();
+      if((*it)) (*it)->Tick();
 
    (*lambda)();
 

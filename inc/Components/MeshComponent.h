@@ -4,36 +4,36 @@
 
 class GLMesh
 {
-public:
-	GLMesh();
-	GLMesh(const char*);
-	GLMesh(const GLMesh&);
-	GLMesh(GLMesh*);
-	~GLMesh();
+  public:
+   GLMesh();
+   GLMesh(const char*);
+   GLMesh(const GLMesh&);
+   GLMesh(GLMesh*);
+   ~GLMesh();
 
-	void Tick();
+   void Tick();
 
-	void SetMaterial(const struct GL_Colour&);
+   void SetMaterial(const struct GL_Colour&);
 
-private:
-	GL_Colour* _material;
-	class FBXLoader* _mesh;
+  private:
+   GL_Colour* _material;
+   class FBXLoader* _mesh;
 };
 
 class GLMeshComponent : public Object
 {
-public:
-	GLMeshComponent();
-	~GLMeshComponent() { delete _mesh; }
+  public:
+   GLMeshComponent();
+   ~GLMeshComponent() { delete _mesh; }
 
-	void Tick();
+   void Tick();
 
-	void SetMesh(GLMesh*);
+   void SetMesh(GLMesh*);
 
-	GLMesh* GetMesh() const;
+   GLMesh* GetMesh() const;
 	
-	void SetMaterial(const struct GL_Colour&);
+   void SetMaterial(const struct GL_Colour&);
 
   private:
-	GLMesh* _mesh;
+   GLMesh* _mesh;
 };

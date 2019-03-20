@@ -14,26 +14,19 @@
 
 
 Object::Object()
-   : _transform{ new GLTransform(GLVector(0.f, 0.f, 0.f), GLRotator(0,0,0), GLScale(1.f, 1.f, 1.f)) }
+   : _transform{ new GLTransform(GLVector(0.f, 0.f, 0.f), GLRotator(0,0,0), GLScale(1.f, 1.f, 1.f)) }, _angle {0.f}
 {
    App::AddObjectToPool(this);
 }
 
 Object::Object(float x, float y, float z)
-   : _transform{ new GLTransform(GLVector(x, y, z), GLRotator(0,0,0), GLScale(1.f, 1.f, 1.f)) }
+   : _transform{ new GLTransform(GLVector(x, y, z), GLRotator(0,0,0), GLScale(1.f, 1.f, 1.f)) }, _angle {0.f}
 {
    App::AddObjectToPool(this);
 }
 
 Object::~Object() 
 { 
-   delete _transform; 
-   for (int i = 1; i < _children.size(); i++)
-   {
-      //if (_children[i]) delete _children[i];
-      //_children.pop_back();
-   }
-   App::RemoveObject(this);
 
 }
 
