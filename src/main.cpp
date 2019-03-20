@@ -8,7 +8,7 @@
 void Setup();
 void Display();
 void Mouse(int button, int state, int x, int y);
-void Keyboard(unsigned char, int, int) {}
+void Keyboard(unsigned char, int, int);
 void MousePassive(int x, int y);
 
 Robot* robot;
@@ -16,7 +16,7 @@ Robot* robot;
 int main(int argc, char** argv)
 {
    App(argc, argv, argv[0], 980, 720);
-   App::RegisterCallbackFuncs(Display, Mouse, NULL, MousePassive);
+   App::RegisterCallbackFuncs(Display, Mouse, Keyboard, NULL, MousePassive);
    App::Init(0.f);
    Setup();
    App::Loop();
@@ -60,6 +60,34 @@ void Mouse(int button, int state, int x, int y)
 	 break;
 	 }
 }
+
+void Keyboard(unsigned char key, int x, int y)
+{
+   switch (key)
+   {
+      case 'z':
+	 robot->MoveForward(10.f);
+	 break;
+      case 'q':
+	 //if at intersection
+	 robot->RotateBody(90.f);
+	 //robot->MoveForward(10.f);
+	 break;
+      case 'a':
+	 //if at intersection
+	 robot->RotateBody(-90.f);
+	 //robot->MoveForward(10.f);
+	 break;
+      case 'p':
+	 //pause the game
+	 break;
+      case 'r':
+	 //return robot to original position
+	 break;
+   }
+	 
+}
+
 
 void MousePassive(int x, int y)
 {

@@ -1,6 +1,8 @@
 #include <Robot.h>
 #include <Core.h>
 #include <Components/MeshComponent.h>
+//#include <stdio.h>
+#include <iostream>
 
 Robot::Robot()
    : _material{new GL_Colour(GL_Colour::White)}
@@ -29,11 +31,18 @@ void Robot::MoveForward(float Delta)
    _antenna->Rotate(GLRotator(0.f, 30.f, 0.f));
    GLVector fv(GetRotation().X, GetRotation().Y, GetRotation().Z);
    Translate(fv * Delta);
+   //Translate(0.f, 0.f, Delta);
+   std::cout<<"walk";
 }
 
 void Robot::RotateHead(float theta)
 {
    _neck->Rotate(theta, GLRotator(0.f, 1.f, 0.f));
+}
+
+void Robot::RotateBody(float theta)
+{
+   _body->Rotate(theta, GLRotator(0.f, 1.f, 0.f));
 }
 
 
