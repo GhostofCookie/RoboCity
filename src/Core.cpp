@@ -15,7 +15,7 @@
 /////////////////////////////////////////////////////////////////////////
 const GL_Colour GL_Colour::Black(0.f, 0.f, 0.f, 1.f);
 const GL_Colour GL_Colour::White(1.f, 1.f, 1.f);
-const GL_Colour GL_Colour::Grey(0.08f, 0.08f, 0.08f);
+const GL_Colour GL_Colour::Grey(0.5f, 0.5f, 0.5f);
 const GL_Colour GL_Colour::Red(1.f, 0.f, 0.f);
 const GL_Colour GL_Colour::Green(0.f, 1.f, 0.f);
 const GL_Colour GL_Colour::Blue(0.f, 0.f, 1.f);
@@ -26,10 +26,10 @@ const GL_Colour GL_Colour::Yellow(1.f, 1.f, 0.f);
 const GL_Colour GL_Colour::Orange(1.f, 0.54f, 0.f);
 
 GL_Colour::GL_Colour(float r, float g, float b)
-   : R{ std::fmod(r, 2.f) }, G{ std::fmod(g, 2.f) }, B{ std::fmod(b, 2.f) }, A{ 1.f } {}
+   : R{ std::fmod(r, 2.f) }, G{ std::fmod(g, 2.f) }, B{ std::fmod(b, 2.f) }, A{ 1.f }, RGBA{r, g, b, 1.f} {}
 
 GL_Colour::GL_Colour(float r, float g, float b, float a)
-   : R{ std::fmod(r, 2.f) }, G{ std::fmod(g, 2.f) }, B{ std::fmod(b, 2.f) }, A{ std::fmod(a, 2.f) } {}
+   : R{ std::fmod(r, 2.f) }, G{ std::fmod(g, 2.f) }, B{ std::fmod(b, 2.f) }, A{ std::fmod(a, 2.f) }, RGBA{r, g, b, a} {}
 
 GL_Colour::GL_Colour(const GL_Colour& c)
    : R{ c.R }, G{ c.G }, B{ c.B }, A{ c.A } {}
@@ -103,15 +103,25 @@ GLRotator::GLRotator(GLRotator * rot)
    : X{ rot->X }, Y{ rot->Y }, Z{ rot->Z }, Angle{ rot->Angle } {}
 
 GLRotator::GLRotator(float x, float y, float z)
-   : X{ x > 0 ? x / x : x != 0 ? x/-x : 0},
-   Y{ y > 0 ? y / y : y != 0 ? y/-y : 0},
-   Z{ z > 0 ? z / z : z != 0 ? z/-z : 0},
+   : X{ x }, Y { y }, Z { z },
    Angle{ std::fmod(std::abs(x) + std::abs(y) + std::abs(z), 360.f) } 
 {
 }
 
 GLRotator::GLRotator(GLVector v1, GLVector v2)
    : X{ v2.X - v1.X }, Y{ v2.Y - v1.Y }, Z{ v2.Z - v1.Z } {}
+
+const GLRotator operator+(const GLRotator& v, const GLRotator& l)
+{
+   return GLRotator(std::fmod(v.X + l.X, 360.f),
+		    std::fmod(v.Y + l.Y, 360.f),
+                    std::fmod(v.Z + l.Z, 360.f));
+}
+
+const GLRotator operator*(const GLRotator& v, const float& d)
+{
+   return GLRotator(v.X * d, v.Y * d, v.Z * d);
+}
 
 /////////////////////////////////////////////////////////////////////////
 // Scale Vectors

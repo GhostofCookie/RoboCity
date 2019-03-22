@@ -45,7 +45,13 @@ void App::Init(float c, GLenum mode)
    // Enable Lighting
    glEnable(GL_LIGHTING); 
    glEnable(GL_LIGHT0);
-   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
+
+   GLfloat lpos[4] = {100, 100, 100, 100};
+   glLightfv(GL_LIGHT0, GL_DIFFUSE, GL_Colour::White.RGBA);
+   glLightfv(GL_LIGHT0, GL_SPECULAR, GL_Colour::White.RGBA);
+   glLightfv(GL_LIGHT0, GL_POSITION, lpos);
+   glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GL_Colour::Grey.RGBA);
+   
    glEnable(GL_COLOR_MATERIAL);
 	
 

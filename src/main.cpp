@@ -8,7 +8,7 @@
 void Setup();
 void Display();
 void Mouse(int button, int state, int x, int y);
-void Keyboard(unsigned char, int, int) {}
+void Keyboard(unsigned char, int, int);
 void MousePassive(int x, int y);
 
 Robot* robot;
@@ -16,8 +16,8 @@ Robot* robot;
 int main(int argc, char** argv)
 {
    App(argc, argv, argv[0], 980, 720);
-   App::RegisterCallbackFuncs(Display, Mouse, NULL, MousePassive);
-   App::Init(0.f);
+   App::RegisterCallbackFuncs(Display, Mouse, Keyboard, MousePassive);
+   App::Init(0.f, GL_SMOOTH);
    Setup();
    App::Loop();
    
@@ -33,8 +33,14 @@ void Setup()
 void Display()
 {
    App::Display([]() { // Put Your code for displaying objects here.
-	 /*  std::string str = std::to_string(b->GetHealth());
-	   App::PrintToScreen(str.c_str(), 0, 0, GL_Colour::Emerald);*/
+	 std::string str = std::to_string(robot->GetLocation().X);
+	 App::PrintToScreen(str.c_str(), 0, 0, GL_Colour::Emerald);
+	 str = std::to_string(robot->GetLocation().Z);
+	 App::PrintToScreen(str.c_str(), 0, -10, GL_Colour::Emerald);
+	 str = std::to_string(robot->GetRotation().Y);
+	 App::PrintToScreen(str.c_str(), 0, -15, GL_Colour::Emerald);
+	   
+	 //robot->Rotate(GLRotator(0.f, 5.f, 0.f));
       });
 }
 
@@ -64,5 +70,22 @@ void Mouse(int button, int state, int x, int y)
 void MousePassive(int x, int y)
 {
    
+}
+
+void Keyboard(unsigned char key, int x, int y)
+{
+   switch(key)
+   {
+      case 'w': case 'W':
+	 robot->MoveForward(10.f);
+	 break;
+	 
+      case 's': case 'S':
+	 robot->MoveForward(-10.f);
+	 break;
+      case 'd': case 'D':
+	 robot->Rotate(90.f, GLRotator(0.f, 90.f, 0.f));
+	 break;
+   };
 }
 

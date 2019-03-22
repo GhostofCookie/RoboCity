@@ -85,6 +85,9 @@ public:
    GLRotator(float, float, float);
    GLRotator(GLVector v1, GLVector v2);
    ~GLRotator() {}
+
+   friend const GLRotator operator+(const GLRotator&, const GLRotator&);
+   friend const GLRotator operator*(const GLRotator&, const float&);
 		
    float X, Y, Z;
    float Angle;

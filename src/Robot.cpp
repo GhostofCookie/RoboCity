@@ -27,7 +27,9 @@ void Robot::Tick()
 void Robot::MoveForward(float Delta)
 {
    _antenna->Rotate(GLRotator(0.f, 30.f, 0.f));
-   GLVector fv(GetRotation().X, GetRotation().Y, GetRotation().Z);
+   GLVector fv(GetRotation().Y == 90.f ? 1 : GetRotation().Y == 270.f ? -1 : 0,
+	       0.f,
+	       GetRotation().Y == 0.f ? 1 : GetRotation().Y == 180.f ? -1 : 0);
    Translate(fv * Delta);
 }
 

@@ -75,13 +75,13 @@ void Object::SetScale(float x, float y, float z)
 void Object::Translate(GLVector v)
 {
    SetLocation(
-      _transform->GetRotation().X + v.X,
+      _transform->GetLocation().X + v.X,
       _transform->GetLocation().Y + v.Y,
       _transform->GetLocation().Z + v.Z);
 
    for (auto obj : _children)
       if (obj) obj->SetLocation(
-	 _transform->GetRotation().X + v.X,
+	 _transform->GetLocation().X + v.X,
 	 _transform->GetLocation().Y + v.Y,
 	 _transform->GetLocation().Z + v.Z);
 }
@@ -103,14 +103,14 @@ void Object::Rotate(GLRotator r)
    _transform->SetRotation(r);
    for (auto obj : _children)
       if(obj) obj->Rotate(r);
-   _angle = _transform->GetRotation().Angle;
+   _angle  = _transform->GetRotation().Angle;
 }
 
 
 void Object::Rotate(float theta, GLRotator v1)
 {
    _angle = std::fmod(_angle + theta, 360.f);
-   _transform->SetRotation(GLRotator(v1));
+   _transform->SetRotation(_transform->GetRotation() + GLRotator(v1));
    for (auto obj : _children)
       if(obj) obj->Rotate(theta, v1);
 }
@@ -122,6 +122,7 @@ const GLVector& Object::GetLocation()
 
 const GLRotator& Object::GetRotation()
 {
+   //_transform->SetRotation(_transform->GetRotation() * _transform->GetRotation().Angle);
    return _transform->GetRotation();
 }
 
