@@ -4,7 +4,6 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
-#include <fbxsdk.h>
 
 #include <stdlib.h>
 #include <stdio.h>    
@@ -12,13 +11,7 @@
 
 #include <string>
 
-#include <Core.h>
-#include <Robot.h>
-#include <Object.h>
-//#include <Building.h>
-
 GLfloat _width = 780, _height = 500;
-std::vector<Object*> _object_pool;
 
 void Setup();
 void Display();
@@ -27,11 +20,8 @@ void reshape(int w, int h);
 void Mouse(int button, int state, int x, int y);
 void Keyboard(unsigned char, int, int);
 void MousePassive(int x, int y);
-void AddObjectToPool(Object* obj);
-void RemoveObject(Object * obj);
-void PrintToScreen(const char * str, float x, float y, GL_Font font, GL_Colour colour);
+void PrintToScreen(const char * str, float x, float y, float[]);
 
-Robot* robot;
 
 int main(int argc, char** argv)
 {
@@ -57,8 +47,6 @@ Setup();
 
 void Setup()
 {
-   robot = new Robot(0.f, 0.f, -30.f);
-   robot->SetScale(GLScale(2.f));
 }
 
 void init (void) 
@@ -79,10 +67,11 @@ void init (void)
    glEnable(GL_LIGHT0);
 
    GLfloat lpos[4] = {100, 100, 100, 100};
-   glLightfv(GL_LIGHT0, GL_DIFFUSE, GL_Colour::White.RGBA);
-   glLightfv(GL_LIGHT0, GL_SPECULAR, GL_Colour::White.RGBA);
+   GLfloat white[4] = {1.f, 1.f, 1.f, 1.f};
+   glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+   glLightfv(GL_LIGHT0, GL_SPECULAR, white);
    glLightfv(GL_LIGHT0, GL_POSITION, lpos);
-   glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GL_Colour::Grey.RGBA);
+   glLightModelfv(GL_LIGHT_MODEL_AMBIENT, white);
    glEnable(GL_COLOR_MATERIAL);
 	
 
@@ -110,10 +99,7 @@ void Display()
 {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-   for (auto it = _object_pool.begin(); it != _object_pool.end(); ++it)
-      if(*it) (*it)->Tick();
 
-// print stuff();
    glColor3f(1,1,1);
    glutWireCube(1.0);
 
@@ -127,18 +113,12 @@ void Mouse(int button, int state, int x, int y)
       case  GLUT_LEFT_BUTTON:
 	 if (state == GLUT_DOWN)
 	 {
-		 robot->RotateHead(30.f);
 	 }
-	 else
-		 robot->RotateHead(-30.f);
 	 break;
       case GLUT_RIGHT_BUTTON:
 	 if (state == GLUT_DOWN)
 	 {
-		 robot->RotateHead(-30.f);
 	 }
-	 else
-		 robot->RotateHead(30.f);
 	 break;
 	 }
 }
@@ -148,16 +128,16 @@ void Keyboard(unsigned char key, int x, int y)
    switch (key)
    {
       case 'z':
-	 robot->MoveForward(10.f);
+	 // robot->MoveForward(10.f);
 	 break;
       case 'q':
 	 //if at intersection
-	 robot->RotateBody(90.f);
+//	 robot->RotateBody(90.f);
 	 //robot->MoveForward(10.f);
 	 break;
       case 'a':
 	 //if at intersection
-	 robot->RotateBody(-90.f);
+	 // robot->RotateBody(-90.f);
 	 //robot->MoveForward(10.f);
 	 break;
       case 'p':
@@ -176,30 +156,14 @@ void MousePassive(int x, int y)
    
 }
 
-void AddObjectToPool(Object* obj)
-{
-   _object_pool.push_back(obj);
-}
-
-void RemoveObject(Object * obj)
-{
-   if(obj)
-      for(auto it = _object_pool.begin(); it != _object_pool.end(); ++it)
-	 if (*it == obj)
-	 {
-	    _object_pool.erase(it);
-	    break;
-	 }
-}
-
-void PrintToScreen(const char * str, float x, float y, GL_Font font, GL_Colour colour)
+void PrintToScreen(const char * str, float x, float y, float c[])
 {
    glDisable(GL_LIGHTING);
-   colour.UseColour();
+   glColor3f(c[0], c[1], c[3]);
    glRasterPos3f(x, y, 1000);
    int len = strlen(str);
    for (int i = 0; i < len; i++)
-      glutBitmapCharacter(font.GetFont(), *str++);
+      glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *str++);
    glEnable(GL_LIGHTING);
 }
 
