@@ -10,6 +10,7 @@ class Robot : public Object
 
    void MoveForward(float);
    void RotateHead(float);
+   void RotateBody(float);
 
   private:
    void SetMeshes();

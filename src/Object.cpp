@@ -8,6 +8,8 @@
 #include <GL/glut.h>
 
 #include <cmath>
+#include <stdio.h>
+#include <iostream>
 
 #include <App.h>
 #include <Core.h>
@@ -28,6 +30,13 @@ Object::Object(float x, float y, float z)
 Object::~Object() 
 { 
 
+}
+
+void Object::Tick()
+{
+   for (auto obj : _children)
+      if(obj)
+	 obj->Tick();
 }
 
 void Object::SetLocation(GLVector loc)
@@ -84,10 +93,12 @@ void Object::Translate(GLVector v)
 	 _transform->GetRotation().X + v.X,
 	 _transform->GetLocation().Y + v.Y,
 	 _transform->GetLocation().Z + v.Z);
+    std::cout<<"walked"<<std::endl;
 }
 
 void Object::Translate(float x, float y, float z)
 {
+   std::cout<<"walked"<<std::endl;
    GLVector l(
       _transform->GetLocation().X + x,
       _transform->GetLocation().Y + y,
@@ -96,6 +107,7 @@ void Object::Translate(float x, float y, float z)
    for (auto obj : _children)
       if(obj)
 	 obj->SetLocation(l);
+
 }
 
 void Object::Rotate(GLRotator r)
