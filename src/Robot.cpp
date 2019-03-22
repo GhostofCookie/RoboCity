@@ -23,7 +23,7 @@ Robot::~Robot()
 
 void Robot::Tick()
 {
-  
+   Object::Tick();
 }
 
 void Robot::MoveForward(float Delta)

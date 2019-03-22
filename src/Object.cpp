@@ -39,6 +39,13 @@ Object::~Object()
 
 }
 
+void Object::Tick()
+{
+   for (auto obj : _children)
+      if(obj)
+	 obj->Tick();
+}
+
 void Object::SetLocation(GLVector loc)
 {
    _transform->SetLocation(loc);
