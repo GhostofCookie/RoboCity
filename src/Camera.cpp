@@ -48,8 +48,8 @@ void Camera::MoveCamera(float eyex, float eyey, float eyez)
 	_goalEyez = eyez;
 
 	_incEyex = _goalEyex - _eyex;
-	_incEyex = _goalEyey - _eyey;
-	_incEyex = _goalEyez - _eyez;
+	_incEyey = _goalEyey - _eyey;
+	_incEyez = _goalEyez - _eyez;
 
 	_isMoving = true;
 }
