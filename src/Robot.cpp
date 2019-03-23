@@ -22,7 +22,6 @@ Robot::~Robot()
 
 void Robot::Render()
 {
-   glLoadIdentity();
    glPushMatrix();
 
    glTranslatef(_loc->x, _loc->y, _loc->z);
@@ -30,6 +29,8 @@ void Robot::Render()
    glTranslatef(-_loc->x, -_loc->y, -_loc->z);
    
    glTranslatef(_loc->x, _loc->y, _loc->z);
+
+   glScalef(.25, .25, .25);
 
    //////////////////////////////////
    // Antenna

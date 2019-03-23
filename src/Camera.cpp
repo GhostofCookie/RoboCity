@@ -3,15 +3,19 @@
 
 Camera::Camera(Robot* robot)
 {
-	_eyex = 0.0f;
-	_eyey = 0.0f;
-	_eyez = -5.0f;
 
-	_atx = 0.0f;
+   float robotx = robot->GetLocation().x;
+   float robotz = robot->GetLocation().z;
+   
+	_eyex = robotx;
+	_eyey = 0.0f;
+	_eyez = 5.0f+robotz;
+
+	_atx = robotx;
 	_aty = 0.0f;
 	
 	// Get the z value of the robot
-	_atz = robot->GetLocation().z;
+	_atz = robotz;
 	_robot = robot;
 
 	_goalRotx = 0;
@@ -27,7 +31,11 @@ Camera::Camera(Robot* robot)
 
 void Camera::Display(int tick)
 {
-	gluLookAt(_eyex, _eyey, _eyez, _atx, _aty, _atz, 0, 1, 0);
+
+   float robotx = _robot->GetLocation().x;
+   float robotz = _robot->GetLocation().z;
+   
+	gluLookAt(robotx, _eyey, _eyez+robotz, robotx, _aty, robotz, 0, 1, 0);
 
 	glRotatef(_curRotx, 1.0, 0.0, 0.0);
 	glRotatef(_curRoty, 0.0, 1.0, 0.0);
