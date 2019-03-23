@@ -33,9 +33,7 @@ void Camera::Display(int tick)
    float ry = _robot->GetLocation().y;
    float rz = _robot->GetLocation().z;
    
-   gluLookAt(_eyex+_robot->GetLocation().x,
-	     _eyey,
-	     _eyez+_robot->GetLocation().z, _atx, _aty, _atz, 0, 1, 0);
+   gluLookAt(_eyex+rx, _eyey, _eyez+rz, _atx, _aty, _atz, 0, 1, 0);
 
    glTranslatef(rx, ry, rz);
    
