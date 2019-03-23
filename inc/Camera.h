@@ -37,12 +37,25 @@ private:
 	float _incRoty;
 	float _incRotz;
 
+	bool _isMoving;
+
+	float _goalEyex;
+	float _goalEyey;
+	float _goalEyez;
+
+	float _incEyex;
+	float _incEyey;
+	float _incEyez;
+
 	void AnimateRotation(int tick);
+	void AnimateMovement(int tick);
+	void FollowRobot();
 public:
 	Camera(Robot* robot);
 
 	void Display(int tick);
-	void MoveCamera(float atx, float aty, float atz);
+	void MoveCamera(float eyex, float eyey, float eyez);
 	void RotateCamera(float rotx, float roty, float rotz);
 	bool IsRotating();
+	bool IsMoving();
 };

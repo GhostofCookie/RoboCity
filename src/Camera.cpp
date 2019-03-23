@@ -3,21 +3,15 @@
 
 Camera::Camera(Robot* robot)
 {
-
-   float robotx = robot->GetLocation().x;
-   float robotz = robot->GetLocation().z;
-   
-	_eyex = robotx;
-	_eyey = 0.0f;
-	_eyez = 5.0f+robotz;
-
-	_atx = robotx;
-	_aty = 0.0f;
-	
-	// Get the z value of the robot
-	_atz = robotz;
 	_robot = robot;
+	_eyex = _robot->GetLocation().x;
+	_eyey = 0.0f;
+	_eyez = 5.0f + _robot->GetLocation().z;
 
+	_atx = _robot->GetLocation().x;
+	_aty = 0.0f;
+	_atz = _robot->GetLocation().z;
+	
 	_goalRotx = 0;
 	_goalRoty = 0;
 	_goalRotz = 0;
@@ -27,32 +21,43 @@ Camera::Camera(Robot* robot)
 	_curRotz = 0;
 
 	_isRotating = false;
+	_isMoving = false;
 }
 
 void Camera::Display(int tick)
 {
-
-   float robotx = _robot->GetLocation().x;
-   float robotz = _robot->GetLocation().z;
+	FollowRobot();
    
-	gluLookAt(robotx, _eyey, _eyez+robotz, robotx, _aty, robotz, 0, 1, 0);
+	gluLookAt(_eyex, _eyey, _eyez, _atx, _aty, _atz, 0, 1, 0);
 
 	glRotatef(_curRotx, 1.0, 0.0, 0.0);
 	glRotatef(_curRoty, 0.0, 1.0, 0.0);
 	glRotatef(_curRotz, 0.0, 0.0, 1.0);
 
-	if (_isRotating)
+	if (_isRotating && tick > 1)
 		AnimateRotation(tick);
+
+	if (_isMoving && tick > 1)
+		AnimateMovement(tick);
 }
 
-void Camera::MoveCamera(float atx, float aty, float atz)
+void Camera::MoveCamera(float eyex, float eyey, float eyez)
 {
+	_goalEyex = eyex;
+	_goalEyey = eyey;
+	_goalEyez = eyez;
+
+	_incEyex = _goalEyex - _eyex;
+	_incEyex = _goalEyey - _eyey;
+	_incEyex = _goalEyez - _eyez;
+
+	_isMoving = true;
 }
 
 void Camera::RotateCamera(float rotx, float roty, float rotz)
 {
 	_goalRotx = rotx;
-	_goalRoty += roty;
+	_goalRoty = roty;
 	_goalRotz = rotz;
 
 	_incRotx = _goalRotx - _curRotx;
@@ -67,6 +72,11 @@ bool Camera::IsRotating()
 	return _isRotating;
 }
 
+bool Camera::IsMoving()
+{
+	return _isMoving;
+}
+
 // Private functions
 
 void Camera::AnimateRotation(int tick)
@@ -76,8 +86,9 @@ void Camera::AnimateRotation(int tick)
 	{
 		_curRotx += (_incRotx / tick) * 2;
 
-		if (_curRotx > _goalRotx)
+		if (_curRotx > _goalRotx && _incRotx > 0 || _curRotx < _goalRotx && _incRotx < 0)
 			_curRotx = _goalRotx;
+
 		doneRotate = false;
 	}
 
@@ -85,8 +96,9 @@ void Camera::AnimateRotation(int tick)
 	{
 		_curRoty += (_incRoty / tick) * 2;
 
-		if (_curRoty > _goalRoty)
+		if (_curRoty > _goalRoty && _incRoty > 0 || _curRoty < _goalRoty && _incRoty < 0)
 			_curRoty = _goalRoty;
+
 		doneRotate = false;
 	}
 
@@ -94,11 +106,51 @@ void Camera::AnimateRotation(int tick)
 	{
 		_curRotz += (_incRotz / tick) * 2;
 
-		if (_curRotz > _goalRotz)
+		if (_curRotz > _goalRotz && _incRotz > 0 || _curRotz < _goalRotz && _incRotz < 0)
 			_curRotz = _goalRotz;
 		doneRotate = false;
 	}
 
 	if (doneRotate)
 		_isRotating = false;
+}
+
+void Camera::AnimateMovement(int tick)
+{
+	bool doneMove = true;
+	if (_eyex != _goalEyex)
+	{
+		_eyex += (_incEyex / tick) * 2;
+
+		if (_eyex > _goalEyex && _incEyex > 0 || _eyex < _goalEyex && _incEyex < 0)
+			_eyex = _goalEyex;
+		doneMove = false;
+	}
+
+	if (_eyey != _goalEyey)
+	{
+		_eyey += (_incEyey / tick) * 2;
+
+		if (_eyey > _goalEyey && _incEyey > 0 || _eyey < _goalEyey && _incEyey < 0)
+			_eyey = _goalEyey;
+		doneMove = false;
+	}
+
+	if (_eyez != _goalEyez)
+	{
+		_eyez += (_incEyez / tick) * 2;
+
+		if (_eyez > _goalEyez && _incEyez > 0 || _eyez < _goalEyez && _incEyez < 0)
+			_eyez = _goalEyez;
+		doneMove = false;
+	}
+
+	if (doneMove)
+		_isMoving = false;
+}
+
+void Camera::FollowRobot()
+{
+	_atx = _robot->GetLocation().x;
+	_atz = _robot->GetLocation().z;
 }
