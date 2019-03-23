@@ -29,6 +29,6 @@ class Robot
   private:
    Coord* _loc;
    Coord* _rot;
-   float _angle, _head_angle;
+   float _angle, _head_angle, _antenna_angle;
 
 };

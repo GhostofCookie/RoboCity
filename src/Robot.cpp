@@ -12,7 +12,8 @@
 Robot::Robot()
    : _loc{new Coord(0.f, 0.f, 0.f)}, _rot{new Coord(0.f, 0.f, 0.f)}
 {
-
+   // Face the robot away from the camera immediately
+   Rotate(180.f);
 }
 
 Robot::~Robot()
@@ -30,15 +31,16 @@ void Robot::Render()
    
    glTranslatef(_loc->x, _loc->y, _loc->z);
 
-   glScalef(.25, .25, .25);
-
+   glScalef(0.1, 0.1, 0.1);
+   
    //////////////////////////////////
    // Antenna
    //////////////////////////////////
    {
       glPushMatrix();
       glColor3f(0.f, 0.5f, 1.f);
-      glTranslatef(0.f, 16.5f, 0.f);
+      glTranslatef(0.f, 12.5f, 0.f);
+      glRotatef(_antenna_angle, 0.f, 1.f, 0.f);
       glRotatef(90.f, 1.f, 0.f, 0.f);
       glTranslatef(0.f, -16.5f, 0.f);
       glTranslatef(0.f, 16.5f, 0.f);
@@ -54,7 +56,7 @@ void Robot::Render()
    {
       glPushMatrix();
       glColor3f(1.f, 0.f, 0.f);
-      glTranslatef(0.f, 12.f, 0.f);
+      glTranslatef(0.f, 8.f, 0.f);
       glRotatef(_head_angle, 0.f, 1.f, 0.f);
       glTranslatef(0.f, -12.f, 0.f);
       glTranslatef(0.f, 12.f, 0.f);
@@ -68,7 +70,7 @@ void Robot::Render()
    {
       glPushMatrix();
       glColor3f(1.f, 0.f, 1.f);
-      glTranslatef(0.f, 10.f, 0.f);
+      glTranslatef(0.f, 6.f, 0.f);
       glRotatef(90.f, 1.f, 0.f, 0.f);
       glTranslatef(0.f, -10.f, 0.f);
       glTranslatef(0.f, 10.f, 0.f);
@@ -82,13 +84,65 @@ void Robot::Render()
    // Body
    //////////////////////////////////
    {
+      float bw = 7.f, bh = 10.f;
+      
       glPushMatrix();
-      glColor3f(0.5f, 0.f, 1.f);
-      glutSolidCube(5.f);
-      glPopMatrix();
+      glBegin(GL_QUADS);
+      
+      glColor3f(0.f, 0.f, 1.f);
    
+      // Forward Face
+      glNormal3f(0.f, 0.f, 1.f);
+      glVertex3f(-bw/2, bh/2, bw/2);
+      glVertex3f(-bw/2, -bh/2, bw/2);
+      glVertex3f(bw/2, -bh/2, bw/2);
+      glVertex3f(bw/2, bh/2, bw/2);
+
+      // Back Face
+      glColor3f(0.f, 1.f, 0.f);
+      glNormal3f(0.f, 0.f, 1.f);
+      glVertex3f(-bw/2, -bh/2, -bw/2);
+      glVertex3f(-bw/2, bh/2, -bw/2);
+      glVertex3f(bw/2, bh/2, -bw/2);
+      glVertex3f(bw/2, -bh/2, -bw/2);
+      
+      // Right Face
+      glColor3f(1.f, 1.f, 0.f);
+      glNormal3f(-1.f, 0.f, 0.f);
+      glVertex3f(-bw/2, bh/2, -bw/2);
+      glVertex3f(-bw/2, -bh/2, -bw/2);
+      glVertex3f(-bw/2, -bh/2, bw/2);
+      glVertex3f(-bw/2, bh/2, bw/2);
+
+      // Left Face
+      glColor3f(1.f, 1.f, 1.f);
+      glNormal3f(1.f, 0.f, 0.f);
+      glVertex3f(bw/2, bh/2, bw/2);
+      glVertex3f(bw/2, -bh/2, bw/2);
+      glVertex3f(bw/2, -bh/2, -bw/2);
+      glVertex3f(bw/2, bh/2, -bw/2);
+
+      // Top Face
+      glColor3f(1.f, 0.f, 1.f);
+      glNormal3f(0.f, 1.f, 0.f);
+      glVertex3f(-bw/2, bh/2, bw/2);
+      glVertex3f(-bw/2, bh/2, -bw/2);
+      glVertex3f(bw/2, bh/2, -bw/2);
+      glVertex3f(bw/2, bh/2, bw/2);
+      
+      // Bottom Face
+      glColor3f(1.f, 0.f, 1.f);
+      glNormal3f(0.f, -1.f, 0.f);
+      glVertex3f(-bw/2, bh/2, -bw/2);
+      glVertex3f(-bw/2, bh/2, bw/2);
+      glVertex3f(bw/2, bh/2, bw/2);
+      glVertex3f(bw/2, bh/2, -bw/2);
+      
+      glEnd();
       glPopMatrix();
    }
+   
+   glPopMatrix();
    
 }
 
@@ -127,6 +181,7 @@ void Robot::RotateHead(float t)
 
 void Robot::MoveForward(float d)
 {
+   _antenna_angle = std::fmod(_antenna_angle + 30.f, 360.f);
    SetLocation(
       _loc->x + ((_angle == 90.f ? 1 : _angle == 270.f ? -1 : 0) * d),
       0.f,
