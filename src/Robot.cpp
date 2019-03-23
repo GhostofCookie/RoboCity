@@ -89,14 +89,21 @@ void Robot::Render()
       glPushMatrix();
       glBegin(GL_QUADS);
       
-      glColor3f(0.f, 0.f, 1.f);
-   
       // Forward Face
+      glColor3f(0.f, 0.f, 1.f);
       glNormal3f(0.f, 0.f, 1.f);
       glVertex3f(-bw/2, bh/2, bw/2);
       glVertex3f(-bw/2, -bh/2, bw/2);
       glVertex3f(bw/2, -bh/2, bw/2);
       glVertex3f(bw/2, bh/2, bw/2);
+
+      // Front Decal
+      glColor3f(1.f, 1.f, 1.f);
+      glNormal3f(1.f, 0.f, 0.f);
+      glVertex3f(-bw/2 + 1, bh/2 - 1, bw/2 + 0.1);
+      glVertex3f(-bw/2 + 1, -bh/2 + 1, bw/2 + 0.1);
+      glVertex3f(bw/2 - 1, -bh/2 + 1, bw/2 + 0.1);
+      glVertex3f(bw/2 - 1, bh/2 - 1, bw/2 + 0.1);
 
       // Back Face
       glColor3f(0.f, 1.f, 0.f);
@@ -123,7 +130,7 @@ void Robot::Render()
       glVertex3f(bw/2, bh/2, -bw/2);
 
       // Top Face
-      glColor3f(1.f, 0.f, 1.f);
+      glColor3f(0.5f, 0.f, 1.f);
       glNormal3f(0.f, 1.f, 0.f);
       glVertex3f(-bw/2, bh/2, bw/2);
       glVertex3f(-bw/2, bh/2, -bw/2);
@@ -131,11 +138,18 @@ void Robot::Render()
       glVertex3f(bw/2, bh/2, bw/2);
       
       // Bottom Face
-      glColor3f(1.f, 0.f, 1.f);
+      glColor3f(0.5f, 0.f, 1.f);
       glNormal3f(0.f, -1.f, 0.f);
       glVertex3f(-bw/2, bh/2, -bw/2);
       glVertex3f(-bw/2, bh/2, bw/2);
       glVertex3f(bw/2, bh/2, bw/2);
+      glVertex3f(bw/2, bh/2, -bw/2);
+
+      // Back Triangles
+      glColor3f(0.5f, 0.f, 1.f);
+      glNormal3f(0.f, -1.f, 0.f);
+      glVertex3f(-bw/2, bh/2, -bw/2);
+      glVertex3f(0.f, bh/2, bw/2);
       glVertex3f(bw/2, bh/2, -bw/2);
       
       glEnd();
