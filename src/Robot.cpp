@@ -170,7 +170,7 @@ void Robot::SetRotation(float x, float y, float z)
 
 void Robot::Rotate(float t)
 {
-   _angle = std::fmod(_angle + t, 360.f);
+   _angle = std::fmod(_angle + t + 360.f, 360.f);
    _rot->y = 1.f;
 }
 
@@ -181,7 +181,7 @@ void Robot::RotateHead(float t)
 
 void Robot::MoveForward(float d)
 {
-   _antenna_angle = std::fmod(_antenna_angle + 30.f, 360.f);
+   _antenna_angle = std::fmod(_antenna_angle + 30.f + 360.f, 360.f);
    SetLocation(
       _loc->x + ((_angle == 90.f ? 1 : _angle == 270.f ? -1 : 0) * d),
       0.f,

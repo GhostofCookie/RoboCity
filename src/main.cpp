@@ -124,15 +124,16 @@ void Display()
    _camera->Display(_tick);
    //gluLookAt(robotx,0,5+robotz,robotx,0,robotz,0,1,0);
 
-   glTranslatef(0.f,0.f,-5.f);
+   //glTranslatef(0.f,0.f,-5.f);
 
    glColor3f(1,1,1);
    glutWireCube(1.0);
 
    _robot->Render();
 
-   //std::cout<<_robot->GetLocation().x<<std::endl;
-   //std::cout<<_robot->GetLocation().z<<std::endl;
+   std::cout<<_robot->GetLocation().x<<std::endl;
+   std::cout<<_robot->GetLocation().z<<std::endl;
+   std::cout<<_robot->GetRotation().y<<std::endl;
 
    glutSwapBuffers();
 
@@ -140,7 +141,7 @@ void Display()
    _curTime = time(NULL);
    if (_curTime - _prevTime > 0)
    {
-      std::cout<< "FPS" << _frameCount / (_curTime - _prevTime) << std::endl;
+      //std::cout<< "FPS" << _frameCount / (_curTime - _prevTime) << std::endl;
       _tick = _frameCount / (_curTime - _prevTime);
       _frameCount = 0;
       _prevTime = _curTime;
@@ -165,24 +166,26 @@ void Keyboard(unsigned char key, int x, int y)
 {
    switch (key)
    {
-      case 'z':
-	 // move robot forward
-	 _robot->MoveForward(10.f);
-	 break;
       case 'q':
 	 //if at intersection, turn left
 	 _robot->Rotate(90.f);
+	 _camera->RotateCamera(0.f, -90.f, 0.f);
 	 //_robot->MoveForward(10.f);
 	 break;
       case 'a':
 	 //if at intersection, turn right
 	 _robot->Rotate(-90.f);
+	 _camera->RotateCamera(0.f, 90.f, 0.f);
 	 break;
       case 'p':
 	 //pause the game
 	 break;
       case 'r':
 	 //return robot to original position
+	 break;
+      case 'z':
+	 // move robot forward
+	 _robot->MoveForward(1.f);
 	 break;
    }
 	 
