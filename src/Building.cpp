@@ -4,11 +4,11 @@ Building::Building(float centerx, float centerz, float w, float h, float d, Buil
 {
 	cx = centerx;
 	cz = centerz;
-	cy = h / 2;
+	cy = h / 2 - 0.5;
 
-	R = 0.5f;
-	G = 0.5f;
-	B = 0.5f;
+	R = 0.8f;
+	G = 0.8f;
+	B = 0.8f;
 
 	Width = w;
 	Height = h;
@@ -88,14 +88,14 @@ float Building::Top()
 	return cy + Height / 2;
 }
 
-float Building::Front()
+float Building::Back()
 {
 	return cz - Depth / 2;
 }
 
-float Building::Back()
+float Building::Front()
 {
-	return cz - Depth / 2;
+	return cz + Depth / 2;
 }
 
 bool Building::IsDead()
@@ -112,40 +112,41 @@ void Building::Draw()
 	glColor3f(R, G, B);
 
 	// front side
-	glVertex3f(Left(), Top(), Front());
-	glVertex3f(Right(), Top(), Front());
-	glVertex3f(Right(), Bottom(), Front());
 	glVertex3f(Left(), Bottom(), Front());
+	glVertex3f(Right(), Bottom(), Front());
+	glVertex3f(Right(), Top(), Front());
+	glVertex3f(Left(), Top(), Front());
 
 	// right side
-	glVertex3f(Right(), Top(), Front());
-	glVertex3f(Right(), Top(), Back());
-	glVertex3f(Right(), Bottom(), Back());
 	glVertex3f(Right(), Bottom(), Front());
+	glVertex3f(Right(), Bottom(), Back());
+	glVertex3f(Right(), Top(), Back());
+	glVertex3f(Right(), Top(), Front());
 
 	// Left side
 	glVertex3f(Left(), Bottom(), Back());
-	glVertex3f(Left(), Top(), Back());
-	glVertex3f(Left(), Top(), Front());
 	glVertex3f(Left(), Bottom(), Front());
+	glVertex3f(Left(), Top(), Front());
+	glVertex3f(Left(), Top(), Back());
 
 	// Top
-	glVertex3f(Left(), Top(), Back());
-	glVertex3f(Right(), Top(), Back());
-	glVertex3f(Right(), Top(), Front());
 	glVertex3f(Left(), Top(), Front());
+	glVertex3f(Right(), Top(), Front());
+	glVertex3f(Right(), Top(), Back());
+	glVertex3f(Left(), Top(), Back());
 
 	// Back side
-	glVertex3f(Right(), Bottom(), Back());
-	glVertex3f(Right(), Top(), Back());
-	glVertex3f(Left(), Top(), Back());
 	glVertex3f(Left(), Bottom(), Back());
+	glVertex3f(Left(), Top(), Back());
+	glVertex3f(Right(), Top(), Back());
+	glVertex3f(Right(), Bottom(), Back());
 
 	glEnd();
 }
 
 void Building::Collapse(int tick)
 {
+	// TODO add shaking
 	Height -= _ogHeight / (float)tick;
 
 	if (Height <= 0)
@@ -155,5 +156,5 @@ void Building::Collapse(int tick)
 		_isDead = true;
 	}
 
-	cy = Height / 2;
+	cy = Height / 2 - 0.5;
 }

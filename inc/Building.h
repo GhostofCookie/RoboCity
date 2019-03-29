@@ -41,7 +41,7 @@ public:
 	float Right();
 	float Bottom();
 	float Top();
-	float Front();
 	float Back();
+	float Front();
 	bool IsDead();
 };
