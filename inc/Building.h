@@ -13,6 +13,11 @@ private:
 	bool _isCollapsing = false;
 	bool _isDead = false;
 	float _ogHeight;
+	float _shakeBound = 0.5;
+	float _shakex = 0.0;
+	float _shakez = 0.0;
+	float _shakexValue = 3.0;
+	float _shakezValue = 3.3;
 
 public:
 	enum BuildingType {
