@@ -16,15 +16,7 @@
 #include <Camera.h>
 #include <Robot.h>
 
-<<<<<<< HEAD
-#define FPS 60
-
-int _prevTime = time(NULL), _curTime, _frameCount = 0;
-int _tick = 0;
-bool pause = false;
-=======
 #include <StreetGenerator.h>
->>>>>>> master
 
 #define FPS 60
 
@@ -43,6 +35,7 @@ void PrintToScreen(const char * str, float x, float y, float[]);
 // Variables
 int _prevTime = time(NULL), _curTime, _frameCount = 0;
 int _tick = 0;
+bool pause = false;
 int curX, curY;
 
 GLfloat _width = 780, _height = 500;
@@ -158,11 +151,6 @@ void Display()
 
    _robot->Render();
 
-<<<<<<< HEAD
-   //std::cout<<_robot->GetLocation().x<<std::endl;
-   //std::cout<<_robot->GetLocation().z<<std::endl;
-   //std::cout<<_robot->GetRotation().y<<std::endl;
-=======
    //std::cout<<(_robot->GetLocation().x-( -cSize/2 * gridScale))/gridScale<<std::endl;
    //std::cout<<(_robot->GetLocation().z - (-cSize/2 * gridScale))/gridScale<<std::endl;
    //std::cout<<_robot->GetRotation().y<<std::endl;
@@ -200,7 +188,6 @@ void Display()
    // All polygons have been drawn.
    glEnd();
    glPopMatrix();
->>>>>>> master
 
    glutSwapBuffers();
 
@@ -258,15 +245,9 @@ void Keyboard(unsigned char key, int x, int y)
 	 break;
       case 'z':
 	 // move robot forward
-<<<<<<< HEAD
-	 if (pause == false) {
-	    _robot->MoveForward(1.f);}
-=======
 	 _robot->MoveForward(gridScale);
 	 curX = (_robot->GetLocation().x-( -cSize/2 * gridScale))/gridScale;
 	 curY = (_robot->GetLocation().z-( -cSize/2 * gridScale))/gridScale;
-   
->>>>>>> master
 	 break;
    }
 	 
