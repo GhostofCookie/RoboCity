@@ -16,6 +16,8 @@
 #include <Camera.h>
 #include <Robot.h>
 
+#include <StreetGenerator.h>
+
 #define FPS 60
 
 int _prevTime = time(NULL), _curTime, _frameCount = 0;
@@ -36,8 +38,10 @@ void PrintToScreen(const char * str, float x, float y, float[]);
 
 Robot* _robot = new Robot();
 Camera* _camera = new Camera(_robot);
+StreetGenerator _city;
 
 
+//
 int main(int argc, char** argv)
 {
    glutInit(&argc, argv);
@@ -62,10 +66,7 @@ Setup();
    return 0;
 }
 
-void Setup()
-{
-}
-
+//
 void init (void) 
 {
    glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -89,14 +90,24 @@ void init (void)
    glLightfv(GL_LIGHT0, GL_SPECULAR, white);
    glLightfv(GL_LIGHT0, GL_POSITION, lpos);
    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, white);
-   glEnable(GL_COLOR_MATERIAL);
-	
+   glEnable(GL_COLOR_MATERIAL);	
 
    glShadeModel(GL_FLAT);
 
    Setup();
 }
 
+//
+void Setup()
+{
+   // City Generator info
+   
+   //_city.CreateStreets_Complex(2);
+   _city.CreateStreets_Simple();
+   //_city.PrintGridStates();
+}
+
+//
 void reshape(int w, int h)
 {
    if (!h) h = 1;
@@ -113,6 +124,7 @@ void reshape(int w, int h)
    glLoadIdentity();
 }
 
+//
 void Display()
 {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -135,6 +147,37 @@ void Display()
    std::cout<<_robot->GetLocation().z<<std::endl;
    std::cout<<_robot->GetRotation().y<<std::endl;
 
+   // City Grid
+   /*
+   glPushMatrix();
+   glBegin(GL_QUADS);
+   
+   int cSize = _city.CitySize();
+   // Creates the grid of quads using the city information
+   for(int y = 0; y < cSize; y++)
+   {
+      for(int x = 0; x < cSize; x++)
+      {
+	 Block b = _city.grid[y][x];
+	 // Decide on color - can be cleaned up
+	 if(b.isIntersection)
+	    glColor3f(0.6, 0.6, 0.6);
+	 else if(b.isStreet)
+	    glColor3f(0.5, 0.5, 0.5);
+	 else
+	    glColor3f(0.1, 0.1, 0.1);
+	 
+	 glVertex3f(b.startX, 0.0, b.startY);
+	 glVertex3f(b.endX, 0.0, b.startY);
+	 glVertex3f(b.endX, 0.0, b.endY);
+	 glVertex3f(b.startX, 0.0, b.endY);
+      }
+   }
+   // All polygons have been drawn.
+   glEnd();
+   glPopMatrix();
+   */
+
    glutSwapBuffers();
 
    _frameCount++;
@@ -148,6 +191,7 @@ void Display()
    }
 }
 
+//
 void Mouse(int button, int state, int x, int y)
 {
    // overObject = if x and y are on a building
@@ -162,6 +206,7 @@ void Mouse(int button, int state, int x, int y)
    }
 }
 
+//
 void Keyboard(unsigned char key, int x, int y)
 {
    switch (key)
@@ -191,6 +236,7 @@ void Keyboard(unsigned char key, int x, int y)
 	 
 }
 
+//
 void SpecialKey(int key, int x, int y)
 {
 
@@ -264,12 +310,13 @@ void SpecialKey(int key, int x, int y)
 		
 }
 
-
+//
 void MousePassive(int x, int y)
 {
    
 }
 
+//
 void PrintToScreen(const char * str, float x, float y, float c[])
 {
    glDisable(GL_LIGHTING);
@@ -281,7 +328,8 @@ void PrintToScreen(const char * str, float x, float y, float c[])
    glEnable(GL_LIGHTING);
 }
 
-void  Idle(int)
+//
+void Idle(int)
 {
    glutPostRedisplay();
    glutTimerFunc(1000 / FPS, Idle, 0);

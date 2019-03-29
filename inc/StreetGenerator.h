@@ -81,7 +81,7 @@ class StreetGenerator
 
   public:
    // Constructor
-   StreetGenerator(int blocks = 20, float bScale = 0.5, float sScale = 0.5);
+   StreetGenerator(int blocks = 20, float bScale = 2.0, float sScale = 2.0);
    // Destructor
    ~StreetGenerator();
 
