@@ -35,6 +35,7 @@ void PrintToScreen(const char * str, float x, float y, float[]);
 // Variables
 int _prevTime = time(NULL), _curTime, _frameCount = 0;
 int _tick = 0;
+bool pause = false;
 int curX, curY;
 
 GLfloat _width = 780, _height = 500;
@@ -223,27 +224,30 @@ void Keyboard(unsigned char key, int x, int y)
    {
       case 'q':
 	 //if at intersection, turn left
+	 if (pause == false) {
 	 _robot->Rotate(90.f);
-	 _camera->RotateCamera(0.f, -90.f, 0.f);
-	 //_robot->MoveForward(10.f);
+	 _camera->RotateCamera(0.f, -90.f, 0.f);}
 	 break;
       case 'a':
 	 //if at intersection, turn right
-	 _robot->Rotate(-90.f);
-	 _camera->RotateCamera(0.f, 90.f, 0.f);
+	 if (pause == false) {
+	    _robot->Rotate(-90.f);
+	    _camera->RotateCamera(0.f, 90.f, 0.f);}
 	 break;
       case 'p':
 	 //pause the game
+	 pause = !pause;
 	 break;
       case 'r':
 	 //return robot to original position
+	 if (pause == false){
+	    _robot->SetLocation(0.0,0.0,0.0);}
 	 break;
       case 'z':
 	 // move robot forward
 	 _robot->MoveForward(gridScale);
 	 curX = (_robot->GetLocation().x-( -cSize/2 * gridScale))/gridScale;
 	 curY = (_robot->GetLocation().z-( -cSize/2 * gridScale))/gridScale;
-   
 	 break;
    }
 	 
@@ -255,69 +259,58 @@ void SpecialKey(int key, int x, int y)
 
    float robotx = _robot->GetLocation().x;
    float robotz = _robot->GetLocation().z;
-   
+   if (pause == false){
    switch (key)
    {
       case GLUT_KEY_F1:
 	 // turn head of robot to face forward
-	 std::cout<<"F1"<<std::endl;
 	 break;
       case GLUT_KEY_F2:
 	 // turn head of robot to the right (clockwise)
 	 _robot->RotateHead(-45.f);
-	 std::cout<<"F2"<<std::endl;
 	 break;
       case GLUT_KEY_F3:
 	 // turn head of robot to the left (counterclockwise)
 	 _robot->RotateHead(45.f);
-	 std::cout<<"F3"<<std::endl;
 	 break;
       case GLUT_KEY_F4:
 	 // reutrns LookAt view to default
 	 _camera->MoveCamera(robotx, 0, robotz+5);
-	 std::cout<<"F4"<<std::endl;
 	 break;
       case GLUT_KEY_F5:
 	 // move LookAt to behind left shoulder
 	 _camera->MoveCamera(robotx-10, 10, robotz+5);
-	 std::cout<<"F5"<<std::endl;
 	 break;
       case GLUT_KEY_F6:
 	 // move LookAt to behind right shoulder
 	 _camera->MoveCamera(robotx+10, 10, robotz+5);
-	 std::cout<<"F6"<<std::endl;
 	 break;
       case GLUT_KEY_F7:
 	 // move LookAt to in front of right shoulder
 	 _camera->MoveCamera(robotx+10, 10, robotz-5);
-	 std::cout<<"F7"<<std::endl;
 	 break;
       case GLUT_KEY_F8:
 	 // move LookAt to in front of left shoulder
 	 _camera->MoveCamera(robotx-10, 10, robotz-5);
-	 std::cout<<"F8"<<std::endl;
 	 break;
       case GLUT_KEY_F9:
 	 // F5 but far away
 	 _camera->MoveCamera(robotx-20, 20, robotz+20);
-	 std::cout<<"F9"<<std::endl;
 	 break;
       case GLUT_KEY_F10:
 	 // F6 but far away
 	 _camera->MoveCamera(robotx+20, 20, robotz+20);
-	 std::cout<<"F10"<<std::endl;
 	 break;
       case GLUT_KEY_F11:
 	 // F7 but far away
 	 _camera->MoveCamera(robotx+20, 20, robotz-20);
-	 std::cout<<"F11"<<std::endl;
 	 break;
       case GLUT_KEY_F12:
 	 // F8 but far away
 	 _camera->MoveCamera(robotx-20, 20, robotz-20);
-	 std::cout<<"F12"<<std::endl;
 	 break;
 	 
+   }
    }
 
 		
