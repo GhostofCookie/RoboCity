@@ -16,14 +16,19 @@
 #include <Camera.h>
 #include <Robot.h>
 
+<<<<<<< HEAD
 #define FPS 60
 
 int _prevTime = time(NULL), _curTime, _frameCount = 0;
 int _tick = 0;
 bool pause = false;
+=======
+#include <StreetGenerator.h>
+>>>>>>> master
 
-GLfloat _width = 780, _height = 500;
+#define FPS 60
 
+// Functions
 void Setup();
 void Display();
 void Idle(int);
@@ -35,10 +40,22 @@ void SpecialKey(int key, int x, int y);
 void MousePassive(int x, int y);
 void PrintToScreen(const char * str, float x, float y, float[]);
 
+// Variables
+int _prevTime = time(NULL), _curTime, _frameCount = 0;
+int _tick = 0;
+int curX, curY;
+
+GLfloat _width = 780, _height = 500;
+
 Robot* _robot = new Robot();
 Camera* _camera = new Camera(_robot);
 
+float gridScale = 5.0;
+int cSize = 0;
+StreetGenerator* _city = new StreetGenerator(20, gridScale, gridScale);
 
+
+// MAIN
 int main(int argc, char** argv)
 {
    glutInit(&argc, argv);
@@ -46,8 +63,8 @@ int main(int argc, char** argv)
    glutInitWindowSize (_width, _height); 
    glutInitWindowPosition (100, 100);
    glutCreateWindow ("RoboCity");
-init ();
-Setup();
+   init();
+   Setup();
    glutDisplayFunc(Display);
    glutReshapeFunc(reshape);
    glutMouseFunc(Mouse);
@@ -55,18 +72,15 @@ Setup();
    glutSpecialFunc(SpecialKey);
    glutTimerFunc(1000/FPS, Idle, 0);
    //glutIdleFunc(Display); // call display while idle
-   //Setup();
    glEnable(GL_DEPTH_TEST);
    glEnable(GL_CULL_FACE);
    glCullFace(GL_BACK);
+   
    glutMainLoop();
    return 0;
 }
 
-void Setup()
-{
-}
-
+//
 void init (void) 
 {
    glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -90,14 +104,26 @@ void init (void)
    glLightfv(GL_LIGHT0, GL_SPECULAR, white);
    glLightfv(GL_LIGHT0, GL_POSITION, lpos);
    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, white);
-   glEnable(GL_COLOR_MATERIAL);
-	
+   glEnable(GL_COLOR_MATERIAL);	
 
    glShadeModel(GL_FLAT);
+
+   // City Generator info
+   //_city->CreateStreets_Complex(1);
+   _city->CreateStreets_Simple();
+   curX = curY = _city->CitySize()/2;
+   cSize = _city->CitySize();
+   //_city->PrintGridStates();
 
    Setup();
 }
 
+//
+void Setup()
+{
+}
+
+//
 void reshape(int w, int h)
 {
    if (!h) h = 1;
@@ -114,6 +140,7 @@ void reshape(int w, int h)
    glLoadIdentity();
 }
 
+//
 void Display()
 {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -124,7 +151,6 @@ void Display()
    glLoadIdentity();
    _camera->Display(_tick);
    //gluLookAt(robotx,0,5+robotz,robotx,0,robotz,0,1,0);
-
    //glTranslatef(0.f,0.f,-5.f);
 
    glColor3f(1,1,1);
@@ -132,9 +158,49 @@ void Display()
 
    _robot->Render();
 
+<<<<<<< HEAD
    //std::cout<<_robot->GetLocation().x<<std::endl;
    //std::cout<<_robot->GetLocation().z<<std::endl;
    //std::cout<<_robot->GetRotation().y<<std::endl;
+=======
+   //std::cout<<(_robot->GetLocation().x-( -cSize/2 * gridScale))/gridScale<<std::endl;
+   //std::cout<<(_robot->GetLocation().z - (-cSize/2 * gridScale))/gridScale<<std::endl;
+   //std::cout<<_robot->GetRotation().y<<std::endl;
+   std::cout<<curX<<std::endl;
+   std::cout<<curY<<std::endl<<std::endl;
+
+   // City Grid
+   glPushMatrix();
+   glTranslatef((-cSize/2 * gridScale)-(gridScale/2),
+		-0.5,
+		(-cSize/2 * gridScale)-(gridScale/2));
+   // Move the object back from the screen.
+   
+   glBegin(GL_QUADS);
+   // Creates the grid of quads using the city information
+   for(int y = 0; y < cSize; y++)
+   {
+      for(int x = 0; x < cSize; x++)
+      {
+	 Block b = _city->grid[y][x];
+	 // Decide on color - can be cleaned up
+	 if(b.isIntersection)
+	    glColor3f(0.6, 0.6, 0.6);
+	 else if(b.isStreet)
+	    glColor3f(0.5, 0.5, 0.5);
+	 else
+	    glColor3f(0.1, 0.1, 0.1);
+
+	 glVertex3f(b.startX, 0.0, b.endY);
+	 glVertex3f(b.endX, 0.0, b.endY);
+	 glVertex3f(b.endX, 0.0, b.startY);
+	 glVertex3f(b.startX, 0.0, b.startY);
+      }
+   }
+   // All polygons have been drawn.
+   glEnd();
+   glPopMatrix();
+>>>>>>> master
 
    glutSwapBuffers();
 
@@ -149,6 +215,7 @@ void Display()
    }
 }
 
+//
 void Mouse(int button, int state, int x, int y)
 {
    // overObject = if x and y are on a building
@@ -163,6 +230,7 @@ void Mouse(int button, int state, int x, int y)
    }
 }
 
+//
 void Keyboard(unsigned char key, int x, int y)
 {
    switch (key)
@@ -190,13 +258,21 @@ void Keyboard(unsigned char key, int x, int y)
 	 break;
       case 'z':
 	 // move robot forward
+<<<<<<< HEAD
 	 if (pause == false) {
 	    _robot->MoveForward(1.f);}
+=======
+	 _robot->MoveForward(gridScale);
+	 curX = (_robot->GetLocation().x-( -cSize/2 * gridScale))/gridScale;
+	 curY = (_robot->GetLocation().z-( -cSize/2 * gridScale))/gridScale;
+   
+>>>>>>> master
 	 break;
    }
 	 
 }
 
+//
 void SpecialKey(int key, int x, int y)
 {
 
@@ -259,12 +335,13 @@ void SpecialKey(int key, int x, int y)
 		
 }
 
-
+//
 void MousePassive(int x, int y)
 {
    
 }
 
+//
 void PrintToScreen(const char * str, float x, float y, float c[])
 {
    glDisable(GL_LIGHTING);
@@ -276,7 +353,8 @@ void PrintToScreen(const char * str, float x, float y, float c[])
    glEnable(GL_LIGHTING);
 }
 
-void  Idle(int)
+//
+void Idle(int)
 {
    glutPostRedisplay();
    glutTimerFunc(1000 / FPS, Idle, 0);

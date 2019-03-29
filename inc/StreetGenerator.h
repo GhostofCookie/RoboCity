@@ -13,12 +13,27 @@
 
 
 
+//
+struct Point
+{
+   float x, y;
+   bool canBuild;
+
+   Point(float _x = 0.0, float _y = 0.0, bool b = false)
+   {
+      x = _x; y = _y;
+      canBuild = b;
+   }
+};
+
 // Represents one block in the grid system
 struct Block 
 {
    // Represents xz coordinates for placement in OpenGL
    float startX, startY;      // Start Corner
    float endX, endY;	      // End Corner
+   //
+   Point buildings[4];
    // Flags for block type
    bool isStreet;
    bool isIntersection;
@@ -61,12 +76,12 @@ class StreetGenerator
    void UpdateIntersections();
    // Sets the scale type for a given 'Block' index
    Block SetBlockScale(Block b, const int x, const int y, const float scale);
-
-
+   // Chooses whether or not a section can be built on
+   void InitBuildSections(Block &b);
 
   public:
    // Constructor
-   StreetGenerator(int blocks = 20, float bScale = 0.5, float sScale = 0.5);
+   StreetGenerator(int blocks = 20, float bScale = 2.0, float sScale = 2.0);
    // Destructor
    ~StreetGenerator();
 
@@ -77,6 +92,7 @@ class StreetGenerator
    // Outputs the current state of each block
    void PrintGridStates();
 
+   // Returns length of city (including streets)
    int CitySize();
 
    // Represents the 2D grid of data 'Block's
