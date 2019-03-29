@@ -147,7 +147,8 @@ void Building::Draw()
 void Building::Collapse(int tick)
 {
 	Height -= _ogHeight / (float)tick;
-	if (Height < 0)
+
+	if (Height <= 0)
 	{
 		Height = 0;
 		_isCollapsing = false;
