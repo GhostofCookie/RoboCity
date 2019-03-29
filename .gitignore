@@ -3,3 +3,10 @@ RoboCity
 *~ *# *.o
 vs/
 Engine
+
+Debug/
+glut32.dll
+robocity.sln
+robocity.vcxproj
+robocity.vcxproj.filters
+robocity.vcxproj.user
