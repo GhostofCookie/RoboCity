@@ -25,6 +25,7 @@ class Robot
    void RotateHead(float);
 
    void MoveForward(float);
+   const Coord ForwardVector();
 
   private:
    Coord* _loc;
