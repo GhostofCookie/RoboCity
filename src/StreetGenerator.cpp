@@ -1,5 +1,6 @@
 #ifdef _WIN32
-#include "pch.h" // Windows
+//#include "pch.h" // Windows
+#include <Windows.h>
 #endif
 #include <cstdlib>
 #include <ctime>
