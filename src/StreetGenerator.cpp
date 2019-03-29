@@ -45,10 +45,32 @@ void StreetGenerator::InitBlocks()
 	 // Generate basic block
 	 Block b;
 	 b = SetBlockScale(b, x, y, blockScale);
-	 // Assign it to the current row of the grid
+	 // At this point, ALL blocks still can't build, need
+	 // to generate city data using one of the create functions
+	 
+	 // Assign the block to the current row of the grid
 	 grid[y].push_back(b);
       }
    }
+}
+
+// Chooses whether or not a section can be built on
+void StreetGenerator::InitBuildSections(Block &b)
+{
+   // Decide whether or not a block's section can have a building
+   int build = rand() % 2;
+   b.buildings[0].canBuild = build;
+   build = rand() % 2;
+   b.buildings[1].canBuild = build;
+   build = rand() % 2;
+   b.buildings[2].canBuild = build;
+   build = rand() % 2;
+   b.buildings[3].canBuild = build;
+
+   b.buildings[0].x = 0.0; b.buildings[0].y = 0.0;
+   b.buildings[1].x = 0.0; b.buildings[1].y = 0.0;
+   b.buildings[2].x = 0.0; b.buildings[2].y = 0.0;
+   b.buildings[3].x = 0.0; b.buildings[3].y = 0.0;
 }
 
 // Sets the scale type for a given 'Block' index
@@ -59,6 +81,18 @@ Block StreetGenerator::SetBlockScale(Block b, const int x, const int y, const fl
    updatedBlock.startY = y * scale;
    updatedBlock.endX = x * scale + scale;
    updatedBlock.endY = y * scale + scale;
+
+   updatedBlock.buildings[0].x = x * scale + (scale / 4);
+   updatedBlock.buildings[0].y = y * scale + (scale / 4);
+
+   updatedBlock.buildings[1].x = x * scale + (scale / 2) + (scale / 4);
+   updatedBlock.buildings[1].y = y * scale + (scale / 4);
+
+   updatedBlock.buildings[2].x = x * scale + (scale / 4);
+   updatedBlock.buildings[2].y = y * scale + (scale / 2) + (scale / 4);
+
+   updatedBlock.buildings[3].x = x * scale + (scale / 2) + (scale / 4);
+   updatedBlock.buildings[3].y = y * scale + (scale / 2) + (scale / 4);
 
    return updatedBlock;
 }
@@ -81,6 +115,8 @@ void StreetGenerator::CreateStreets_Simple()
 	 // Else check if just a street
 	 else if (y % 2 == 0 || x % 2 == 0)
 	    grid[y][x].isStreet = true;
+	 else
+	    InitBuildSections(grid[y][x]);
       }
    }
    UpdateIntersections();
@@ -106,6 +142,7 @@ void StreetGenerator::CreateStreets_Complex(const int complexity)
 	       // Pick a random street on any of the 4 sides
 	       // with a 60% chance to not pick any street
 	       const int side = rand() % 10;
+	       
 	       switch (side)
 	       {
 		  case 0:
@@ -198,6 +235,17 @@ void StreetGenerator::PrintGridStates()
 	    std::cout << " " << " ";
       }
       std::cout << std::endl;
+   }
+
+   for (int y = 0; y < citySize; y++)
+   {
+      for (int x = 0; x < citySize; x++)
+      {
+	 std::cout << grid[y][x].buildings[0].canBuild << ", ";
+	 std::cout << grid[y][x].buildings[1].canBuild << ", ";
+	 std::cout << grid[y][x].buildings[2].canBuild << ", ";
+	 std::cout << grid[y][x].buildings[3].canBuild << "\n\n";
+      }
    }
    std::cout << std::endl; // leaves an extra space at the end
 }
