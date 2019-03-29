@@ -20,11 +20,7 @@
 
 #define FPS 60
 
-int _prevTime = time(NULL), _curTime, _frameCount = 0;
-int _tick = 0;
-
-GLfloat _width = 780, _height = 500;
-
+// Functions
 void Setup();
 void Display();
 void Idle(int);
@@ -36,12 +32,20 @@ void SpecialKey(int key, int x, int y);
 void MousePassive(int x, int y);
 void PrintToScreen(const char * str, float x, float y, float[]);
 
+// Variables
+int _prevTime = time(NULL), _curTime, _frameCount = 0;
+int _tick = 0;
+
+GLfloat _width = 780, _height = 500;
+
 Robot* _robot = new Robot();
 Camera* _camera = new Camera(_robot);
-StreetGenerator* _city = new StreetGenerator(20, 1.0, 1.0);
+
+float gridScale = 5.0;
+StreetGenerator* _city = new StreetGenerator(20, gridScale, gridScale);
 
 
-//
+// MAIN
 int main(int argc, char** argv)
 {
    glutInit(&argc, argv);
@@ -49,8 +53,8 @@ int main(int argc, char** argv)
    glutInitWindowSize (_width, _height); 
    glutInitWindowPosition (100, 100);
    glutCreateWindow ("RoboCity");
-init();
-Setup();
+   init();
+   Setup();
    glutDisplayFunc(Display);
    glutReshapeFunc(reshape);
    glutMouseFunc(Mouse);
@@ -58,7 +62,6 @@ Setup();
    glutSpecialFunc(SpecialKey);
    glutTimerFunc(1000/FPS, Idle, 0);
    //glutIdleFunc(Display); // call display while idle
-   //Setup();
    glEnable(GL_DEPTH_TEST);
    glEnable(GL_CULL_FACE);
    glCullFace(GL_BACK);
@@ -136,7 +139,6 @@ void Display()
    glLoadIdentity();
    _camera->Display(_tick);
    //gluLookAt(robotx,0,5+robotz,robotx,0,robotz,0,1,0);
-
    //glTranslatef(0.f,0.f,-5.f);
 
    glColor3f(1,1,1);
@@ -152,7 +154,7 @@ void Display()
    glPushMatrix();
 
    int cSize = _city->CitySize();
-   glTranslatef(-cSize/2-0.5, -0.5, -cSize/2-0.5);
+   glTranslatef(-cSize/2-(gridScale/2), -0.5, -cSize/2-(gridScale/2));
    // Move the object back from the screen.
    
    glBegin(GL_QUADS);
@@ -179,7 +181,6 @@ void Display()
    // All polygons have been drawn.
    glEnd();
    glPopMatrix();
-   
 
    glutSwapBuffers();
 
@@ -233,7 +234,7 @@ void Keyboard(unsigned char key, int x, int y)
 	 break;
       case 'z':
 	 // move robot forward
-	 _robot->MoveForward(1.f);
+	 _robot->MoveForward(gridScale);
 	 break;
    }
 	 
