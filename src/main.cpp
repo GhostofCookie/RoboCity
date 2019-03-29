@@ -38,7 +38,7 @@ void PrintToScreen(const char * str, float x, float y, float[]);
 
 Robot* _robot = new Robot();
 Camera* _camera = new Camera(_robot);
-StreetGenerator _city;
+StreetGenerator* _city = new StreetGenerator(20, 1.0, 1.0);
 
 
 //
@@ -49,7 +49,7 @@ int main(int argc, char** argv)
    glutInitWindowSize (_width, _height); 
    glutInitWindowPosition (100, 100);
    glutCreateWindow ("RoboCity");
-init ();
+init();
 Setup();
    glutDisplayFunc(Display);
    glutReshapeFunc(reshape);
@@ -62,6 +62,7 @@ Setup();
    glEnable(GL_DEPTH_TEST);
    glEnable(GL_CULL_FACE);
    glCullFace(GL_BACK);
+   
    glutMainLoop();
    return 0;
 }
@@ -94,17 +95,17 @@ void init (void)
 
    glShadeModel(GL_FLAT);
 
+   // City Generator info
+   //_city->CreateStreets_Complex(2);
+   _city->CreateStreets_Simple();
+   //_city->PrintGridStates();
+
    Setup();
 }
 
 //
 void Setup()
 {
-   // City Generator info
-   
-   //_city.CreateStreets_Complex(2);
-   _city.CreateStreets_Simple();
-   //_city.PrintGridStates();
 }
 
 //
@@ -143,22 +144,24 @@ void Display()
 
    _robot->Render();
 
-   std::cout<<_robot->GetLocation().x<<std::endl;
-   std::cout<<_robot->GetLocation().z<<std::endl;
-   std::cout<<_robot->GetRotation().y<<std::endl;
+   //std::cout<<_robot->GetLocation().x<<std::endl;
+   //std::cout<<_robot->GetLocation().z<<std::endl;
+   //std::cout<<_robot->GetRotation().y<<std::endl;
 
    // City Grid
-   /*
    glPushMatrix();
-   glBegin(GL_QUADS);
+
+   int cSize = _city->CitySize();
+   glTranslatef(-cSize/2-0.5, -0.5, -cSize/2-0.5);
+   // Move the object back from the screen.
    
-   int cSize = _city.CitySize();
+   glBegin(GL_QUADS);
    // Creates the grid of quads using the city information
    for(int y = 0; y < cSize; y++)
    {
       for(int x = 0; x < cSize; x++)
       {
-	 Block b = _city.grid[y][x];
+	 Block b = _city->grid[y][x];
 	 // Decide on color - can be cleaned up
 	 if(b.isIntersection)
 	    glColor3f(0.6, 0.6, 0.6);
@@ -166,17 +169,17 @@ void Display()
 	    glColor3f(0.5, 0.5, 0.5);
 	 else
 	    glColor3f(0.1, 0.1, 0.1);
-	 
-	 glVertex3f(b.startX, 0.0, b.startY);
-	 glVertex3f(b.endX, 0.0, b.startY);
-	 glVertex3f(b.endX, 0.0, b.endY);
+
 	 glVertex3f(b.startX, 0.0, b.endY);
+	 glVertex3f(b.endX, 0.0, b.endY);
+	 glVertex3f(b.endX, 0.0, b.startY);
+	 glVertex3f(b.startX, 0.0, b.startY);
       }
    }
    // All polygons have been drawn.
    glEnd();
    glPopMatrix();
-   */
+   
 
    glutSwapBuffers();
 
