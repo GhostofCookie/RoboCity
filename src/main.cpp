@@ -35,6 +35,7 @@ void PrintToScreen(const char * str, float x, float y, float[]);
 // Variables
 int _prevTime = time(NULL), _curTime, _frameCount = 0;
 int _tick = 0;
+int curX, curY;
 
 GLfloat _width = 780, _height = 500;
 
@@ -42,6 +43,7 @@ Robot* _robot = new Robot();
 Camera* _camera = new Camera(_robot);
 
 float gridScale = 5.0;
+int cSize = 0;
 StreetGenerator* _city = new StreetGenerator(20, gridScale, gridScale);
 
 
@@ -99,8 +101,10 @@ void init (void)
    glShadeModel(GL_FLAT);
 
    // City Generator info
-   //_city->CreateStreets_Complex(2);
+   //_city->CreateStreets_Complex(1);
    _city->CreateStreets_Simple();
+   curX = curY = _city->CitySize()/2;
+   cSize = _city->CitySize();
    //_city->PrintGridStates();
 
    Setup();
@@ -146,15 +150,17 @@ void Display()
 
    _robot->Render();
 
-   //std::cout<<_robot->GetLocation().x<<std::endl;
-   //std::cout<<_robot->GetLocation().z<<std::endl;
+   //std::cout<<(_robot->GetLocation().x-( -cSize/2 * gridScale))/gridScale<<std::endl;
+   //std::cout<<(_robot->GetLocation().z - (-cSize/2 * gridScale))/gridScale<<std::endl;
    //std::cout<<_robot->GetRotation().y<<std::endl;
+   std::cout<<curX<<std::endl;
+   std::cout<<curY<<std::endl<<std::endl;
 
    // City Grid
    glPushMatrix();
-
-   int cSize = _city->CitySize();
-   glTranslatef(-cSize/2-(gridScale/2), -0.5, -cSize/2-(gridScale/2));
+   glTranslatef((-cSize/2 * gridScale)-(gridScale/2),
+		-0.5,
+		(-cSize/2 * gridScale)-(gridScale/2));
    // Move the object back from the screen.
    
    glBegin(GL_QUADS);
@@ -235,6 +241,9 @@ void Keyboard(unsigned char key, int x, int y)
       case 'z':
 	 // move robot forward
 	 _robot->MoveForward(gridScale);
+	 curX = (_robot->GetLocation().x-( -cSize/2 * gridScale))/gridScale;
+	 curY = (_robot->GetLocation().z-( -cSize/2 * gridScale))/gridScale;
+   
 	 break;
    }
 	 
