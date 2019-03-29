@@ -45,6 +45,7 @@ void StreetGenerator::InitBlocks()
       {
 	 // Generate basic block
 	 Block b;
+	 InitBuildSections(b);
 	 b = SetBlockScale(b, x, y, blockScale);
 	 // At this point, ALL blocks still can't build, need
 	 // to generate city data using one of the create functions
@@ -59,14 +60,17 @@ void StreetGenerator::InitBlocks()
 void StreetGenerator::InitBuildSections(Block &b)
 {
    // Decide whether or not a block's section can have a building
-   int build = rand() % 2;
-   b.buildings[0].canBuild = build;
-   build = rand() % 2;
-   b.buildings[1].canBuild = build;
-   build = rand() % 2;
-   b.buildings[2].canBuild = build;
-   build = rand() % 2;
-   b.buildings[3].canBuild = build;
+   if(!b.isStreet)
+   {
+      int build = rand() % 2;
+      b.buildings[0].canBuild = build;
+      build = rand() % 2;
+      b.buildings[1].canBuild = build;
+      build = rand() % 2;
+      b.buildings[2].canBuild = build;
+      build = rand() % 2;
+      b.buildings[3].canBuild = build;
+   }
 
    b.buildings[0].x = 0.0; b.buildings[0].y = 0.0;
    b.buildings[1].x = 0.0; b.buildings[1].y = 0.0;
@@ -116,8 +120,6 @@ void StreetGenerator::CreateStreets_Simple()
 	 // Else check if just a street
 	 else if (y % 2 == 0 || x % 2 == 0)
 	    grid[y][x].isStreet = true;
-	 else
-	    InitBuildSections(grid[y][x]);
       }
    }
    UpdateIntersections();

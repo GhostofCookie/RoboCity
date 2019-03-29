@@ -1,6 +1,7 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
@@ -9,6 +10,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <cstring>
+#include <vector>
 
 #include <string>
 #include <time.h>
@@ -17,8 +19,11 @@
 #include <Robot.h>
 
 #include <StreetGenerator.h>
+#include <Building.h>
 
 #define FPS 60
+
+
 
 // Functions
 void Setup();
@@ -31,21 +36,23 @@ void Keyboard(unsigned char, int, int);
 void SpecialKey(int key, int x, int y);
 void MousePassive(int x, int y);
 void PrintToScreen(const char * str, float x, float y, float[]);
+Building::BuildingType ChooseBuildingType();
 
 // Variables
+GLfloat _width = 780, _height = 500;
 int _prevTime = time(NULL), _curTime, _frameCount = 0;
 int _tick = 0;
 bool pause = false;
-int curX, curY;
-
-GLfloat _width = 780, _height = 500;
+int gridX, gridZ;
 
 Robot* _robot = new Robot();
 Camera* _camera = new Camera(_robot);
 
-float gridScale = 5.0;
 int cSize = 0;
+float gridScale = 10.0;
 StreetGenerator* _city = new StreetGenerator(20, gridScale, gridScale);
+std::vector<std::vector<Building>> buildings;
+
 
 
 // MAIN
@@ -76,6 +83,9 @@ int main(int argc, char** argv)
 //
 void init (void) 
 {
+   // Set random seed
+   srand(time(0));
+   
    glClearColor(0.0, 0.0, 0.0, 1.0);
    glClearDepth(1.0);
 	
@@ -102,13 +112,54 @@ void init (void)
    glShadeModel(GL_FLAT);
 
    // City Generator info
-   //_city->CreateStreets_Complex(1);
    _city->CreateStreets_Simple();
-   curX = curY = _city->CitySize()/2;
+   gridX = gridZ = _city->CitySize()/2;
    cSize = _city->CitySize();
-   //_city->PrintGridStates();
 
-   Setup();
+   // Init buildings per block
+   for(int z = 0; z < cSize; z++)
+   {
+      buildings.push_back(std::vector<Building>());
+      for(int x = 0; x < cSize; x++)
+      {
+	 Block b = _city->grid[z][x];
+	 
+	 if(!b.isStreet)
+	 {
+	    int heightMult;
+	    
+	    // For each of the 4 building locations:
+	    if(b.buildings[0].canBuild)
+	    {
+	       heightMult = (rand() % 3) + 1;
+	       buildings[z].push_back(Building(
+					 b.buildings[0].x, b.buildings[0].y,
+					 gridScale/3, gridScale/heightMult, gridScale/3, ChooseBuildingType() ));
+	    }
+	    if(b.buildings[1].canBuild)
+	    {
+	       heightMult = (rand() % 4) + 1;
+	       buildings[z].push_back(Building(
+					 b.buildings[1].x, b.buildings[1].y,
+					 gridScale/3, gridScale/heightMult, gridScale/3, ChooseBuildingType() ));
+	    }
+	    if(b.buildings[2].canBuild)
+	    {
+	       heightMult = (rand() % 4) + 1;
+	       buildings[z].push_back(Building(
+					 b.buildings[2].x, b.buildings[2].y,
+					 gridScale/3, gridScale/heightMult, gridScale/3, ChooseBuildingType() ));
+	    }
+	    if(b.buildings[3].canBuild)
+	    {
+	       heightMult = (rand() % 4) + 1;
+	       buildings[z].push_back(Building(
+					 b.buildings[3].x, b.buildings[3].y,
+					 gridScale/3, gridScale/heightMult, gridScale/3, ChooseBuildingType() ));
+	    }
+	 }
+      }
+   }
 }
 
 //
@@ -146,38 +197,36 @@ void Display()
    //gluLookAt(robotx,0,5+robotz,robotx,0,robotz,0,1,0);
    //glTranslatef(0.f,0.f,-5.f);
 
+   // Center point
    glColor3f(1,1,1);
    glutWireCube(1.0);
 
    _robot->Render();
 
-   //std::cout<<(_robot->GetLocation().x-( -cSize/2 * gridScale))/gridScale<<std::endl;
-   //std::cout<<(_robot->GetLocation().z - (-cSize/2 * gridScale))/gridScale<<std::endl;
-   //std::cout<<_robot->GetRotation().y<<std::endl;
-   std::cout<<curX<<std::endl;
-   std::cout<<curY<<std::endl<<std::endl;
+   // Debug comments
+   //std::cout << gridX << std::endl;
+   //std::cout << gridZ << std::endl << std::endl;
 
    // City Grid
    glPushMatrix();
    glTranslatef((-cSize/2 * gridScale)-(gridScale/2),
 		-0.5,
 		(-cSize/2 * gridScale)-(gridScale/2));
-   // Move the object back from the screen.
-   
+
    glBegin(GL_QUADS);
    // Creates the grid of quads using the city information
-   for(int y = 0; y < cSize; y++)
+   for(int z = 0; z < cSize; z++)
    {
       for(int x = 0; x < cSize; x++)
       {
-	 Block b = _city->grid[y][x];
+	 Block b = _city->grid[z][x];
 	 // Decide on color - can be cleaned up
 	 if(b.isIntersection)
 	    glColor3f(0.6, 0.6, 0.6);
 	 else if(b.isStreet)
-	    glColor3f(0.5, 0.5, 0.5);
+	    glColor3f(0.55, 0.55, 0.55);
 	 else
-	    glColor3f(0.1, 0.1, 0.1);
+	    glColor3f(0.05, 0.05, 0.05);
 
 	 glVertex3f(b.startX, 0.0, b.endY);
 	 glVertex3f(b.endX, 0.0, b.endY);
@@ -187,7 +236,14 @@ void Display()
    }
    // All polygons have been drawn.
    glEnd();
+
+   // Draw all buildings
+   for(int z = 0; z < buildings.size(); z++)
+      for(int x = 0; x < buildings[z].size(); x++)
+	 buildings[z][x].Display(_tick);
+   
    glPopMatrix();
+   
 
    glutSwapBuffers();
 
@@ -224,15 +280,18 @@ void Keyboard(unsigned char key, int x, int y)
    {
       case 'q':
 	 //if at intersection, turn left
-	 if (pause == false) {
-	 _robot->Rotate(90.f);
-	 _camera->RotateCamera(0.f, -90.f, 0.f);}
+	 if (!pause)
+	 {
+	    _robot->Rotate(90.f);
+	    _camera->RotateCamera(0.f, -90.f, 0.f);
+	 }
 	 break;
       case 'a':
-	 //if at intersection, turn right
-	 if (pause == false) {
+	 if (!pause)
+	 {
 	    _robot->Rotate(-90.f);
-	    _camera->RotateCamera(0.f, 90.f, 0.f);}
+	    _camera->RotateCamera(0.f, 90.f, 0.f);
+	 }
 	 break;
       case 'p':
 	 //pause the game
@@ -240,14 +299,23 @@ void Keyboard(unsigned char key, int x, int y)
 	 break;
       case 'r':
 	 //return robot to original position
-	 if (pause == false){
-	    _robot->SetLocation(0.0,0.0,0.0);}
+	 if (!pause)
+	    _robot->SetLocation(0.0, 0.0, 0.0);
 	 break;
       case 'z':
+	 float nextX = gridX + _robot->ForwardVector().x;
+	 float nextZ = gridZ + _robot->ForwardVector().z;
+	 
 	 // move robot forward
-	 _robot->MoveForward(gridScale);
-	 curX = (_robot->GetLocation().x-( -cSize/2 * gridScale))/gridScale;
-	 curY = (_robot->GetLocation().z-( -cSize/2 * gridScale))/gridScale;
+	 if((nextX >= 0 && nextX < cSize) && (nextZ >= 0 && nextZ < cSize))
+	 {
+	    if(_city->grid[nextX][nextZ].isStreet)
+	    {
+	       _robot->MoveForward(gridScale);
+	       gridX = ( _robot->GetLocation().x-(-cSize/2 * gridScale) ) / gridScale;
+	       gridZ = ( _robot->GetLocation().z-(-cSize/2 * gridScale) ) / gridScale;
+	    }
+	 }
 	 break;
    }
 	 
@@ -259,61 +327,58 @@ void SpecialKey(int key, int x, int y)
 
    float robotx = _robot->GetLocation().x;
    float robotz = _robot->GetLocation().z;
-   if (pause == false){
-   switch (key)
-   {
-      case GLUT_KEY_F1:
-	 // turn head of robot to face forward
-	 break;
-      case GLUT_KEY_F2:
-	 // turn head of robot to the right (clockwise)
-	 _robot->RotateHead(-45.f);
-	 break;
-      case GLUT_KEY_F3:
-	 // turn head of robot to the left (counterclockwise)
-	 _robot->RotateHead(45.f);
-	 break;
-      case GLUT_KEY_F4:
-	 // reutrns LookAt view to default
-	 _camera->MoveCamera(robotx, 0, robotz+5);
-	 break;
-      case GLUT_KEY_F5:
-	 // move LookAt to behind left shoulder
-	 _camera->MoveCamera(robotx-10, 10, robotz+5);
-	 break;
-      case GLUT_KEY_F6:
-	 // move LookAt to behind right shoulder
-	 _camera->MoveCamera(robotx+10, 10, robotz+5);
-	 break;
-      case GLUT_KEY_F7:
-	 // move LookAt to in front of right shoulder
-	 _camera->MoveCamera(robotx+10, 10, robotz-5);
-	 break;
-      case GLUT_KEY_F8:
-	 // move LookAt to in front of left shoulder
-	 _camera->MoveCamera(robotx-10, 10, robotz-5);
-	 break;
-      case GLUT_KEY_F9:
-	 // F5 but far away
-	 _camera->MoveCamera(robotx-20, 20, robotz+20);
-	 break;
-      case GLUT_KEY_F10:
-	 // F6 but far away
-	 _camera->MoveCamera(robotx+20, 20, robotz+20);
-	 break;
-      case GLUT_KEY_F11:
-	 // F7 but far away
-	 _camera->MoveCamera(robotx+20, 20, robotz-20);
-	 break;
-      case GLUT_KEY_F12:
-	 // F8 but far away
-	 _camera->MoveCamera(robotx-20, 20, robotz-20);
-	 break;
-	 
-   }
-   }
-
-		
+   if (pause == false) {
+      switch (key)
+      {
+	 case GLUT_KEY_F1:
+	    // turn head of robot to face forward
+	    break;
+	 case GLUT_KEY_F2:
+	    // turn head of robot to the right (clockwise)
+	    _robot->RotateHead(-45.f);
+	    break;
+	 case GLUT_KEY_F3:
+	    // turn head of robot to the left (counterclockwise)
+	    _robot->RotateHead(45.f);
+	    break;
+	 case GLUT_KEY_F4:
+	    // reutrns LookAt view to default
+	    _camera->MoveCamera(robotx, 0, robotz+5);
+	    break;
+	 case GLUT_KEY_F5:
+	    // move LookAt to behind left shoulder
+	    _camera->MoveCamera(robotx-10, 10, robotz+5);
+	    break;
+	 case GLUT_KEY_F6:
+	    // move LookAt to behind right shoulder
+	    _camera->MoveCamera(robotx+10, 10, robotz+5);
+	    break;
+	 case GLUT_KEY_F7:
+	    // move LookAt to in front of right shoulder
+	    _camera->MoveCamera(robotx+10, 10, robotz-5);
+	    break;
+	 case GLUT_KEY_F8:
+	    // move LookAt to in front of left shoulder
+	    _camera->MoveCamera(robotx-10, 10, robotz-5);
+	    break;
+	 case GLUT_KEY_F9:
+	    // F5 but far away
+	    _camera->MoveCamera(robotx-20, 20, robotz+20);
+	    break;
+	 case GLUT_KEY_F10:
+	    // F6 but far away
+	    _camera->MoveCamera(robotx+20, 20, robotz+20);
+	    break;
+	 case GLUT_KEY_F11:
+	    // F7 but far away
+	    _camera->MoveCamera(robotx+20, 20, robotz-20);
+	    break;
+	 case GLUT_KEY_F12:
+	    // F8 but far away
+	    _camera->MoveCamera(robotx-20, 20, robotz-20);
+	    break;	 
+      }
+   }		
 }
 
 //
@@ -332,6 +397,29 @@ void PrintToScreen(const char * str, float x, float y, float c[])
    for (int i = 0; i < len; i++)
       glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *str++);
    glEnable(GL_LIGHTING);
+}
+
+Building::BuildingType ChooseBuildingType()
+{
+   const int num = rand() % 3;
+   
+   Building::BuildingType bt;
+   switch (num)
+   {
+      case 0:
+	 bt = Building::Weak;
+	 break;
+      case 1:
+	 bt = Building::Strong;
+	 break;
+      case 2:
+	 bt = Building::Indestructable;
+	 break;
+      default:
+	 bt = Building::Weak;
+	 break;
+   }
+   return bt;
 }
 
 //
