@@ -65,9 +65,9 @@ void Camera::MoveCamera(float eyex, float eyey, float eyez)
 
 void Camera::RotateCamera(float rotx, float roty, float rotz)
 {
-	_goalRotx = rotx;
-	_goalRoty = roty;
-	_goalRotz = rotz;
+	_goalRotx += rotx;
+	_goalRoty += roty;
+	_goalRotz += rotz;
 
    _incRotx = _goalRotx - _curRotx;
    _incRoty = _goalRoty - _curRoty;
