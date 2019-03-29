@@ -23,6 +23,7 @@ class Robot
 
    void Rotate(float);
    void RotateHead(float);
+   void ResetHead();
 
    void MoveForward(float);
    const Coord ForwardVector();
