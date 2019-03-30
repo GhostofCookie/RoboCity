@@ -36,6 +36,8 @@ void Keyboard(unsigned char, int, int);
 void SpecialKey(int key, int x, int y);
 void SpecialKeyUp(int key, int x, int y);
 void MousePassive(int x, int y);
+void ProcessHits(GLint hits, GLuint buffer[]);
+void drawObjects(GLenum mode);
 void PrintToScreen(const char * str, float x, float y, float[]);
 Building::BuildingType ChooseBuildingType();
 
@@ -186,6 +188,21 @@ void reshape(int w, int h)
    glLoadIdentity();
 }
 
+void drawObjects(GLenum mode)
+{
+   int i = 1;
+   for(int z = 0; z < buildings.size(); z++)
+      for(int x = 0; x < buildings[z].size(); x++)
+      {
+	 if (mode == GL_SELECT)
+	 {
+	    glLoadName(i);
+	    ++i;
+	 }  
+	 buildings[z][x].Display(_tick);
+      }
+}
+
 //
 void Display()
 {
@@ -242,14 +259,12 @@ void Display()
    // All polygons have been drawn.
    glEnd();
 
-   // Draw all buildings
-   for(int z = 0; z < buildings.size(); z++)
-      for(int x = 0; x < buildings[z].size(); x++)
-	 buildings[z][x].Display(_tick);
+   drawObjects(GL_RENDER);
    
    glPopMatrix();
    
 
+   glFlush();
    glutSwapBuffers();
 
    _frameCount++;
@@ -266,15 +281,64 @@ void Display()
 //
 void Mouse(int button, int state, int x, int y)
 {
+   GLuint selectBuf[512];
+   GLint hits;
+   GLint viewport[4];
    // overObject = if x and y are on a building
    switch (button)
    {
       case  GLUT_LEFT_BUTTON:
-	 if (state == GLUT_UP)
-	    //if (overObject)
+	 if (state == GLUT_DOWN)
 	 {
+	    glGetIntegerv(GL_VIEWPORT, viewport);
+	    glSelectBuffer (512, selectBuf);
+
+	    glRenderMode(GL_SELECT);
+	    glInitNames();
+	    glPushName(0);
+
+	    glMatrixMode (GL_PROJECTION);
+	    glPushMatrix ();
+	    glLoadIdentity ();
+	    /*  create 5x5 pixel picking region near cursor location	*/
+	    gluPickMatrix ((GLdouble) x, (GLdouble) (viewport[3] - y ), 5.f, 5.f, viewport);
+	    gluPerspective(60.f, 1, 0.0001, 1000);
+	    drawObjects(GL_SELECT);
+	    glMatrixMode (GL_PROJECTION);
+	    glPopMatrix ();
+	    glFlush ();
+
+	    hits = glRenderMode (GL_RENDER);	    
+	    ProcessHits (hits, selectBuf);
+	    
+	    glutPostRedisplay();
 	 }
 	 break;
+   }
+}
+
+void ProcessHits (GLint hits, GLuint buffer[])
+{
+   unsigned int i, j;
+   GLint names, *ptr;
+
+   printf ("hits = %d\n", hits);
+   ptr = (GLint *) buffer; 
+   for (i = 0; i < hits; i++) {	/*  for each hit  */
+      names = *ptr;
+	   ptr+=3;
+      for (j = 0; j < names; j++) { /*  for each name */
+         /*
+	   nest for loop for all buildings
+	   of each building calc closest to robot
+	   if closer replace closesst
+
+	 */
+
+	 std::cout<<names<<std::endl;
+         ptr++;
+      }
+      printf ("\n");
    }
 }
 
@@ -287,15 +351,19 @@ void Keyboard(unsigned char key, int x, int y)
 	 //if at intersection, turn left
 	 if (!pause)
 	 {
+	    if (_city->grid[gridX][gridZ].isIntersection){
 	    _robot->Rotate(90.f);
 	    _camera->RotateCamera(0.f, -90.f, 0.f);
+	    }
 	 }
 	 break;
       case 'a':
 	 if (!pause)
 	 {
+	    if (_city->grid[gridX][gridZ].isIntersection){
 	    _robot->Rotate(-90.f);
 	    _camera->RotateCamera(0.f, 90.f, 0.f);
+	    }
 	 }
 	 break;
       case 'p':
