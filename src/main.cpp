@@ -13,6 +13,7 @@
 #include <vector>
 
 #include <string>
+<<<<<<< Updated upstream
 #include <time.h>
 
 #include <Camera.h>
@@ -23,6 +24,9 @@
 
 #define FPS 60
 
+=======
+#include <Robot.h>
+>>>>>>> Stashed changes
 
 
 // Functions
@@ -41,6 +45,7 @@ void drawObjects(GLenum mode);
 void PrintToScreen(const char * str, float x, float y, float[]);
 Building::BuildingType ChooseBuildingType();
 
+<<<<<<< Updated upstream
 // Variables
 GLfloat _width = 780, _height = 500;
 int _prevTime = time(NULL), _curTime, _frameCount = 0;
@@ -55,6 +60,9 @@ int cSize = 0;
 float gridScale = 10.0;
 StreetGenerator* _city = new StreetGenerator(20, gridScale, gridScale);
 std::vector<std::vector<Building>> buildings;
+=======
+Robot* robot = new Robot();
+>>>>>>> Stashed changes
 
 
 
@@ -72,10 +80,15 @@ int main(int argc, char** argv)
    glutReshapeFunc(reshape);
    glutMouseFunc(Mouse);
    glutKeyboardFunc(Keyboard);
+<<<<<<< Updated upstream
    glutSpecialFunc(SpecialKey);
    glutSpecialUpFunc(SpecialKeyUp);
    glutTimerFunc(1000/FPS, Idle, 0);
    //glutIdleFunc(Display); // call display while idle
+=======
+   glutIdleFunc(Display); // call display while idle
+   //Setup();
+>>>>>>> Stashed changes
    glEnable(GL_DEPTH_TEST);
    glEnable(GL_CULL_FACE);
    glCullFace(GL_BACK);
@@ -84,7 +97,15 @@ int main(int argc, char** argv)
    return 0;
 }
 
+<<<<<<< Updated upstream
 //
+=======
+void Setup()
+{
+   
+}
+
+>>>>>>> Stashed changes
 void init (void) 
 {
    // Set random seed
@@ -178,8 +199,13 @@ void reshape(int w, int h)
    glViewport(0, 0, _width, _height);
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
+<<<<<<< Updated upstream
    //glOrtho(-_width/10, _width/10, -_height/10, _height/10, -1000, 1000);
    gluPerspective(45.f, (GLfloat) w / (GLfloat) h, 0.01, 1000);
+=======
+//   glOrtho(-_width/10, _width/10, -_height/10, _height/10, -1000, 1000);
+   gluPerspective(45.f, (GLfloat) w / (GLfloat) h, 0.001, 1000);
+>>>>>>> Stashed changes
    
    _width = (GLfloat) w;
    _height = (GLfloat) h;   
@@ -208,6 +234,7 @@ void Display()
 {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+<<<<<<< Updated upstream
    float robotx = _robot->GetLocation().x;
    float robotz = _robot->GetLocation().z;
 
@@ -217,8 +244,15 @@ void Display()
    //glTranslatef(0.f,0.f,-5.f);
 
    // Center point
+=======
+   glLoadIdentity();
+   gluLookAt(0, 0, -5, 0, 0, 1, 0, 1, 0);
+   
+>>>>>>> Stashed changes
    glColor3f(1,1,1);
    glutWireCube(1.0);
+   robot->Render();
+   
 
    _robot->Render();
 
@@ -347,6 +381,7 @@ void Keyboard(unsigned char key, int x, int y)
 {
    switch (key)
    {
+<<<<<<< Updated upstream
       case 'q':
 	 //if at intersection, turn left
 	 if (!pause)
@@ -356,6 +391,15 @@ void Keyboard(unsigned char key, int x, int y)
 	    _camera->RotateCamera(0.f, -90.f, 0.f);
 	    }
 	 }
+=======
+      case 'z':
+	 robot->MoveForward(10.f);
+	 break;
+      case 'q':
+	 //if at intersection
+	 robot->Rotate(90.f);
+	 robot->MoveForward(10.f);
+>>>>>>> Stashed changes
 	 break;
       case 'a':
 	 if (!pause)
