@@ -326,7 +326,7 @@ void Robot::AnimateMovement(int tick)
 
 	_legAngle += _legMove;
 
-	float lMax = 45.0f;
+	float lMax = 30.0f;
 	if (_legAngle > lMax || _legAngle < -lMax)
 		_legMove *= -1;
 

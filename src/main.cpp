@@ -29,35 +29,33 @@ void Setup();
 void Display();
 void Idle(int);
 void init(void);
-void reshape(int w, int h);
+void Reshape(int w, int h);
 void Mouse(int button, int state, int x, int y);
 void Keyboard(unsigned char, int, int);
 void SpecialKey(int key, int x, int y);
 void SpecialKeyUp(int key, int x, int y);
 void MousePassive(int x, int y);
 void ProcessHits(GLint hits, GLuint buffer[]);
-void drawObjects(GLenum mode);
+void DrawObjects(GLenum mode);
 void PrintToScreen(const char * str, float x, float y, float[]);
+void CalculateMoveGrid();
 Building::BuildingType ChooseBuildingType();
 
 // Variables
-GLfloat _width = 780, _height = 500;
-int _prevTime = time(NULL), _curTime, _frameCount = 0;
-int _tick = 0;
-bool pause = false;
-int gridX, gridZ;
-bool selectReady = true;
-
-Robot* _robot = new Robot();
-Camera* _camera = new Camera(_robot);
-
 int cSize = 0;
 float gridScale = 10.0;
-StreetGenerator* _city = new StreetGenerator(20, gridScale, gridScale);
-std::vector<std::vector<Building>> buildings;
-
+int gridX, gridZ;
+bool pause = false;
+int _prevTime = time(NULL), _curTime, _frameCount = 0;
+bool selectReady = true;
+int _tick = 0;
+GLfloat _width = 780, _height = 500;
 float worldOffset;
 
+std::vector<std::vector<Building>> buildings;
+Robot* _robot = new Robot();
+Camera* _camera = new Camera(_robot);
+StreetGenerator* _city = new StreetGenerator(20, gridScale, gridScale);
 
 // MAIN
 int main(int argc, char** argv)
@@ -70,13 +68,12 @@ int main(int argc, char** argv)
 	init();
 	Setup();
 	glutDisplayFunc(Display);
-	glutReshapeFunc(reshape);
+	glutReshapeFunc(Reshape);
 	glutMouseFunc(Mouse);
 	glutKeyboardFunc(Keyboard);
 	glutSpecialFunc(SpecialKey);
 	glutSpecialUpFunc(SpecialKeyUp);
 	glutTimerFunc(1000 / FPS, Idle, 0);
-	//glutIdleFunc(Display); // call display while idle
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
@@ -175,7 +172,7 @@ void Setup()
 }
 
 //
-void reshape(int w, int h)
+void Reshape(int w, int h)
 {
 	if (!h) h = 1;
 	glViewport(0, 0, _width, _height);
@@ -190,7 +187,7 @@ void reshape(int w, int h)
 	glLoadIdentity();
 }
 
-void drawObjects(GLenum mode)
+void DrawObjects(GLenum mode)
 {
 	int i = 1;
 	for (int z = 0; z < buildings.size(); z++)
@@ -198,6 +195,7 @@ void drawObjects(GLenum mode)
 		{
 			if (mode == GL_SELECT)
 			{
+				// calculate the 1D index from a 2D index
 				glLoadName(z + (x * buildings.size()));
 			}
 			buildings[z][x].Display(_tick);
@@ -215,24 +213,15 @@ void Display()
 
 	glLoadIdentity();
 	_camera->Display(_tick);
-	//gluLookAt(robotx,0,5+robotz,robotx,0,robotz,0,1,0);
-	//glTranslatef(0.f,0.f,-5.f);
 
 	// Center point
 	glColor3f(1, 1, 1);
 	glutWireCube(1.0);
 
-	_robot->Render();
-
-	// Debug comments
-	//std::cout << gridX << std::endl;
-	//std::cout << gridZ << std::endl << std::endl;
+	_robot->Render(_tick);
 
 	// City Grid
 	glPushMatrix();
-	//glTranslatef((-cSize / 2 * gridScale) - (gridScale / 2),
-	//	-0.5,
-	//	(-cSize / 2 * gridScale) - (gridScale / 2));
 
 	glBegin(GL_QUADS);
 	// Creates the grid of quads using the city information
@@ -265,26 +254,23 @@ void Display()
 	// All polygons have been drawn.
 	glEnd();
 
-	drawObjects(GL_RENDER);
-
+	DrawObjects(GL_RENDER);
 	glPopMatrix();
-
 
 	glFlush();
 	glutSwapBuffers();
 
+	// Calculate frames per second
 	_frameCount++;
 	_curTime = time(NULL);
 	if (_curTime - _prevTime > 0)
 	{
-		//std::cout<< "FPS" << _frameCount / (_curTime - _prevTime) << std::endl;
 		_tick = _frameCount / (_curTime - _prevTime);
 		_frameCount = 0;
 		_prevTime = _curTime;
 	}
 }
 
-//
 void Mouse(int button, int state, int x, int y)
 {
 	// overObject = if x and y are on a building
@@ -313,7 +299,7 @@ void Mouse(int button, int state, int x, int y)
 				/*  create 5x5 pixel picking region near cursor location	*/
 				gluPickMatrix((GLdouble)x, (GLdouble)(viewport[3] - y), 1.f, 1.f, viewport);
 				gluPerspective(45.f, _width / _height, 0.01, 1000);
-				drawObjects(GL_SELECT);
+				DrawObjects(GL_SELECT);
 				glMatrixMode(GL_PROJECTION);
 				glPopMatrix();
 				glFlush();
@@ -340,24 +326,19 @@ void ProcessHits(GLint hits, GLuint buffer[])
 
 	unsigned int i, j;
 	GLint names, *ptr;
-	
+
 	ptr = (GLint *)buffer;
 	for (i = 0; i < hits; i++)
 	{	/*  for each hit  */
 		names = *ptr;
 		ptr += 3;
 		for (j = 0; j < names; j++)
-		{ /*  for each name */
-		   /*
-		 nest for loop for all buildings
-		 of each building calc closest to robot
-		 if closer replace closesst
-
-	   */
+		{
 			int x = *ptr % buildings.size();
 			int y = *ptr / buildings.size();
 			Building b = buildings[x][y];
 
+			// Find the closest hit object
 			diffLength = std::sqrt(std::pow(b.cx - _robot->GetLocation().x, 2) + std::pow(b.cz - _robot->GetLocation().z, 2));
 			if (diffLength < minLength)
 			{
@@ -371,8 +352,8 @@ void ProcessHits(GLint hits, GLuint buffer[])
 		}
 	}
 
+	// damage the building
 	if (isHit) buildings[idxX][idxY].Hit();
-
 	selectReady = true;
 }
 
@@ -383,8 +364,9 @@ void Keyboard(unsigned char key, int x, int y)
 	{
 	case 'q':
 		//if at intersection, turn left
-		if (!pause)
+		if (!pause && _robot->IsMoving() == false)
 		{
+			CalculateMoveGrid();
 			if (_city->grid[gridX][gridZ].isIntersection) {
 				_robot->Rotate(90.f);
 				_camera->RotateCamera(0.f, -90.f, 0.f);
@@ -392,8 +374,9 @@ void Keyboard(unsigned char key, int x, int y)
 		}
 		break;
 	case 'a':
-		if (!pause)
+		if (!pause && _robot->IsMoving() == false)
 		{
+			CalculateMoveGrid();
 			if (_city->grid[gridX][gridZ].isIntersection) {
 				_robot->Rotate(-90.f);
 				_camera->RotateCamera(0.f, 90.f, 0.f);
@@ -410,26 +393,29 @@ void Keyboard(unsigned char key, int x, int y)
 			_robot->SetLocation(0.0, 0.0, 0.0);
 		break;
 	case 'z':
-		// TODO uncomment after robot updates in main
-		//gridX = (_robot->GetLocation().x - (-cSize / 2 * gridScale)) / gridScale;
-		//gridZ = (_robot->GetLocation().z - (-cSize / 2 * gridScale)) / gridScale;
-
-		float nextX = gridX + _robot->ForwardVector().x;
-		float nextZ = gridZ + _robot->ForwardVector().z;
-
-		// move robot forward
-		if ((nextX >= 0 && nextX < cSize) && (nextZ >= 0 && nextZ < cSize))
+		if (_robot->IsMoving() == false)
 		{
-			if (_city->grid[nextX][nextZ].isStreet)
+			CalculateMoveGrid();
+			float nextX = gridX + _robot->ForwardVector().x;
+			float nextZ = gridZ + _robot->ForwardVector().z;
+
+			// move robot forward
+			if ((nextX >= 0 && nextX < cSize) && (nextZ >= 0 && nextZ < cSize))
 			{
-				_robot->MoveForward(gridScale);
-				gridX = (_robot->GetLocation().x - (-cSize / 2 * gridScale)) / gridScale;
-				gridZ = (_robot->GetLocation().z - (-cSize / 2 * gridScale)) / gridScale;
+				if (_city->grid[nextX][nextZ].isStreet)
+				{
+					_robot->MoveForward(gridScale);
+				}
 			}
 		}
 		break;
 	}
+}
 
+void CalculateMoveGrid()
+{
+	gridX = (_robot->GetLocation().x - (-cSize / 2 * gridScale)) / gridScale;
+	gridZ = (_robot->GetLocation().z - (-cSize / 2 * gridScale)) / gridScale;
 }
 
 //
@@ -541,7 +527,7 @@ Building::BuildingType ChooseBuildingType()
 	return bt;
 }
 
-//
+// This is what sets the fps to a hard value of the defined FPS
 void Idle(int)
 {
 	glutPostRedisplay();
