@@ -122,7 +122,7 @@ void StreetGenerator::CreateStreets_Simple()
 	    grid[y][x].isStreet = true;
       }
    }
-   UpdateIntersections();
+   //UpdateIntersections();
 }
 
 // Generates a randomized grid of data 'Blocks' with possible surrounding streets
