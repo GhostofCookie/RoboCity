@@ -30,9 +30,9 @@ Building::Building(float centerx, float centerz, float w, float h, float d, Buil
 	case Building::Indestructable:
 		_health = 1;
 		Destructable = false;
-		R = 0.3f;
-		G = 0.3f;
-		B = 0.3f;
+		R = 0.101f;
+		G = 0.142f;
+		B = 0.183f;
 		break;
 	default:
 		break;
