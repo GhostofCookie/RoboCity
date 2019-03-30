@@ -30,8 +30,6 @@ void Robot::Render()
    glTranslatef(-_loc->x, -_loc->y, -_loc->z);
    
    glTranslatef(_loc->x, _loc->y + 0.5, _loc->z);
-
-   glScalef(0.1, 0.1, 0.1);
    
    //////////////////////////////////
    // Antenna
@@ -43,19 +41,19 @@ void Robot::Render()
       glRotatef(_antenna_angle, 0.f, 1.f, 0.f);
       
       glPushMatrix();
-      glTranslatef(0.f, 12.5f, 0.f);
+      glTranslatef(0.f, 1.25f, 0.f);
 
       glRotatef(90.f, 1.f, 0.f, 0.f);
-      glTranslatef(0.f, -12.5f, 0.f);
-      glTranslatef(0.f, 12.5f, 0.f);
+      glTranslatef(0.f, -1.25f, 0.f);
+      glTranslatef(0.f, 1.25f, 0.f);
       GLUquadric* c = gluNewQuadric();
-      gluCylinder(c, 0.5f, 0.5f, 2.f, 16, 2);
+      gluCylinder(c, 0.05f, 0.05f, 0.2f, 16, 2);
       gluQuadricDrawStyle(c, GL_FILL);
       glPopMatrix();
       glPushMatrix();
-      glTranslatef(0.f, 12.5f, 0.f);
+      glTranslatef(0.f, 1.25f, 0.f);
       glScalef(2.f, 0.5f, 0.5f);
-      glutSolidCube(1.f);
+      glutSolidCube(0.1f);
       glPopMatrix();
       
       glPopMatrix();
@@ -67,11 +65,11 @@ void Robot::Render()
    {
       glPushMatrix();
       glColor3f(0.1f, 0.1f, 0.1f);
-      glTranslatef(0.f, 8.f, 0.f);
+      glTranslatef(0.f, 0.8f, 0.f);
       glRotatef(_head_angle, 0.f, 1.f, 0.f);
-      glTranslatef(0.f, -12.f, 0.f);
-      glTranslatef(0.f, 12.f, 0.f);
-      glutSolidCube(5.f);
+      glTranslatef(0.f, -1.2f, 0.f);
+      glTranslatef(0.f, 1.2f, 0.f);
+      glutSolidCube(0.5f);
 
       //////////////////////////////////
       // Eyes
@@ -81,16 +79,16 @@ void Robot::Render()
 	 glColor3f(0.3f, 0.f, 0.03f);
 	 glPushMatrix();
 	 {
-	    glTranslatef(-1.5f, 0.f, 2.f);
+	    glTranslatef(-0.15f, 0.f, 0.2f);
 	    GLUquadric* c = gluNewQuadric();
-	    gluSphere(c, 1.f, 8, 8);
-	    glTranslatef(1.5f, 0.f, -2.f);
+	    gluSphere(c, 0.1f, 8, 8);
+	    glTranslatef(0.15f, 0.f, -0.2f);
 	 }
 	 {
-	    glTranslatef(1.5f, 0.f, 2.f);
+	    glTranslatef(0.15f, 0.f, 0.2f);
 	    GLUquadric* c = gluNewQuadric();
-	    gluSphere(c, 1.f, 8, 8);
-	    glTranslatef(-1.5f, 0.f, -2.f);
+	    gluSphere(c, 0.1f, 8, 8);
+	    glTranslatef(-0.15f, 0.f, -0.2f);
 	    glPopMatrix();
 	 }
 	 glPopMatrix();
@@ -103,12 +101,12 @@ void Robot::Render()
    {
       glPushMatrix();
       glColor3f(0.1f, 0.7f, 1.f);
-      glTranslatef(0.f, 6.f, 0.f);
+      glTranslatef(0.f, 0.6f, 0.f);
       glRotatef(90.f, 1.f, 0.f, 0.f);
-      glTranslatef(0.f, -10.f, 0.f);
-      glTranslatef(0.f, 10.f, 0.f);
+      glTranslatef(0.f, -1.f, 0.f);
+      glTranslatef(0.f, 1.f, 0.f);
       GLUquadric* c = gluNewQuadric();
-      gluCylinder(c, 2.f, 2.f, 2.f, 16, 2);
+      gluCylinder(c, 0.2f, 0.2f, 0.2f, 16, 2);
       gluQuadricDrawStyle(c, GL_FILL);
       glPopMatrix();
    }
@@ -117,7 +115,7 @@ void Robot::Render()
    // Body
    //////////////////////////////////
    {
-      float bw = 7.f, bh = 10.f;
+      float bw = 0.7f, bh = 1.f;
       
       glPushMatrix();
       glBegin(GL_QUADS);
@@ -126,41 +124,41 @@ void Robot::Render()
       {
 	 glColor3f(0.102f, 0.734f, 0.609f);
 	 glNormal3f(0.f, 0.f, 0.f);
-	 glVertex3f(-bw/2 + 1, bh/2 - 1, bw/2 + 0.1);
-	 glVertex3f(-bw/2 + 1, -bh/2 + 1, bw/2 + 0.1);
-	 glVertex3f(bw/2 - 1, -bh/2 + 1, bw/2 + 0.1);
-	 glVertex3f(bw/2 - 1, bh/2 - 1, bw/2 + 0.1);
+	 glVertex3f(-bw/2 + 0.1, bh/2 - 0.1, bw/2 + 0.01);
+	 glVertex3f(-bw/2 + 0.1, -bh/2 + 0.1, bw/2 + 0.01);
+	 glVertex3f(bw/2 - 0.1, -bh/2 + 0.1, bw/2 + 0.01);
+	 glVertex3f(bw/2 - 0.1, bh/2 - 0.1, bw/2 + 0.01);
       }
 
       // Front/Back Colour
       glColor3f(0.555f, 0.266f, 0.656f);
       
       // Forward Face
-      glNormal3f(0.f, 0.f, -1.f);
+      glNormal3f(0.f, 0.f, 1.f);
       glVertex3f(-bw/2, bh/2, bw/2);
       glVertex3f(-bw/2, -bh/2, bw/2);
       glVertex3f(bw/2, -bh/2, bw/2);
       glVertex3f(bw/2, bh/2, bw/2);
 
       // Back Face
-      glNormal3f(0.f, 0.f, 1.f);
+      glNormal3f(0.f, 0.f, -1.f);
       glVertex3f(-bw/2, -bh/2, -bw/2);
       glVertex3f(-bw/2, bh/2, -bw/2);
       glVertex3f(bw/2, bh/2, -bw/2);
       glVertex3f(bw/2, -bh/2, -bw/2);
 
       // Side Colour
-      glColor3f(0.f, 1.f, 0.f);
+      glColor3f(0.f, 0.5f, 0.7f);
       
       // Right Face
-      glNormal3f(-1.f, 0.f, 0.f);
+      glNormal3f(1.f, 0.f, 0.f);
       glVertex3f(-bw/2, bh/2, -bw/2);
       glVertex3f(-bw/2, -bh/2, -bw/2);
       glVertex3f(-bw/2, -bh/2, bw/2);
       glVertex3f(-bw/2, bh/2, bw/2);
 
       // Left Face
-      glNormal3f(1.f, 0.f, 0.f);
+      glNormal3f(-1.f, 0.f, 0.f);
       glVertex3f(bw/2, bh/2, bw/2);
       glVertex3f(bw/2, -bh/2, bw/2);
       glVertex3f(bw/2, -bh/2, -bw/2);
@@ -193,16 +191,16 @@ void Robot::Render()
       glPushMatrix();
       glBegin(GL_TRIANGLES);
       glNormal3f(0.f, -1.f, 0.f);
-      glVertex3f(bw/2 - 1, -bh/2 + 1, -bw/2-0.1);
-      glVertex3f(-bw/2 + 1, -bh/2 + 1, -bw/2-0.1);  
-      glVertex3f(0.f, 0.f, -bw/2-0.1); 
+      glVertex3f(bw/2 - 0.1f, -bh/2 + 0.1f, -bw/2 - 0.01);
+      glVertex3f(-bw/2 + 0.1f, -bh/2 + 0.1f, -bw/2 - 0.01);  
+      glVertex3f(0.f, 0.f, -bw/2-0.01); 
       glEnd();
       
       glBegin(GL_TRIANGLES);
       glNormal3f(0.f, -1.f, 0.f);
-      glVertex3f(bw/2 - 1, 0, -bw/2-0.1);
-      glVertex3f(-bw/2 + 1, 0, -bw/2-0.1);  
-      glVertex3f(0.f, bh/2 - 1, -bw/2-0.1); 
+      glVertex3f(bw/2 - 0.1f, 0, -bw/2 - 0.01f);
+      glVertex3f(-bw/2 + 0.1f, 0, -bw/2 - 0.01f);  
+      glVertex3f(0.f, bh/2 - 0.1f, -bw/2 - 0.01f); 
       glEnd();
       glPopMatrix();
       
@@ -216,15 +214,15 @@ void Robot::Render()
       glColor3f(0.f, 0.5f, 0.1f);
       
       glPushMatrix();
-      glTranslatef(-1.5f, -8.f, 0.f);
+      glTranslatef(-0.15f, -0.8f, 0.f);
       glScalef(1.f, 3.f, 1.f);
-      glutSolidCube(2.f);
+      glutSolidCube(0.2f);
       glPopMatrix();
 
       glPushMatrix();
-      glTranslatef(1.5f, -8.f, 0.f);
+      glTranslatef(0.15f, -0.8f, 0.f);
       glScalef(1.f, 3.f, 1.f);
-      glutSolidCube(2.f);
+      glutSolidCube(0.2f);
       glPopMatrix();
    }
 
