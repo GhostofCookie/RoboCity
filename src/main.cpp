@@ -34,6 +34,7 @@ void reshape(int w, int h);
 void Mouse(int button, int state, int x, int y);
 void Keyboard(unsigned char, int, int);
 void SpecialKey(int key, int x, int y);
+void SpecialKeyUp(int key, int x, int y);
 void MousePassive(int x, int y);
 void PrintToScreen(const char * str, float x, float y, float[]);
 Building::BuildingType ChooseBuildingType();
@@ -70,6 +71,7 @@ int main(int argc, char** argv)
    glutMouseFunc(Mouse);
    glutKeyboardFunc(Keyboard);
    glutSpecialFunc(SpecialKey);
+   glutSpecialUpFunc(SpecialKeyUp);
    glutTimerFunc(1000/FPS, Idle, 0);
    //glutIdleFunc(Display); // call display while idle
    glEnable(GL_DEPTH_TEST);
@@ -86,7 +88,7 @@ void init (void)
    // Set random seed
    srand(time(0));
    
-   glClearColor(0.0, 0.0, 0.0, 1.0);
+   glClearColor(0.468, 0.839, 0.976, 1.0);
    glClearDepth(1.0);
 	
    // Enable depth testing.
@@ -109,7 +111,7 @@ void init (void)
    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, white);
    glEnable(GL_COLOR_MATERIAL);	
 
-   glShadeModel(GL_FLAT);
+   glShadeModel(GL_SMOOTH);
 
    // City Generator info
    _city->CreateStreets_Simple();
@@ -222,11 +224,14 @@ void Display()
 	 Block b = _city->grid[z][x];
 	 // Decide on color - can be cleaned up
 	 if(b.isIntersection)
-	    glColor3f(0.6, 0.6, 0.6);
+	    //glColor3f(0.6, 0.6, 0.6);
+	    glColor3f(0.1, 0.1, 0.1);
 	 else if(b.isStreet)
-	    glColor3f(0.55, 0.55, 0.55);
+	    //glColor3f(0.55, 0.55, 0.55);
+	    glColor3f(0.1, 0.1, 0.1);
 	 else
-	    glColor3f(0.05, 0.05, 0.05);
+	    //glColor3f(0.05, 0.05, 0.05);
+	    glColor3f(0.5, 0.5, 0.5);
 
 	 glVertex3f(b.startX, 0.0, b.endY);
 	 glVertex3f(b.endX, 0.0, b.endY);
@@ -332,6 +337,7 @@ void SpecialKey(int key, int x, int y)
       {
 	 case GLUT_KEY_F1:
 	    // turn head of robot to face forward
+	    SpecialKeyUp(key, x, y);
 	    break;
 	 case GLUT_KEY_F2:
 	    // turn head of robot to the right (clockwise)
@@ -343,42 +349,48 @@ void SpecialKey(int key, int x, int y)
 	    break;
 	 case GLUT_KEY_F4:
 	    // reutrns LookAt view to default
-	    _camera->MoveCamera(robotx, 0, robotz+5);
+	    _camera->MoveCamera(0, 1, gridScale);
+	    std::cout<<robotz-5<<std::endl;
 	    break;
 	 case GLUT_KEY_F5:
 	    // move LookAt to behind left shoulder
-	    _camera->MoveCamera(robotx-10, 10, robotz+5);
+	    _camera->MoveCamera(-2*gridScale, 10, gridScale);
 	    break;
 	 case GLUT_KEY_F6:
 	    // move LookAt to behind right shoulder
-	    _camera->MoveCamera(robotx+10, 10, robotz+5);
+	    _camera->MoveCamera(2*gridScale, 10, gridScale);
 	    break;
 	 case GLUT_KEY_F7:
 	    // move LookAt to in front of right shoulder
-	    _camera->MoveCamera(robotx+10, 10, robotz-5);
+	    _camera->MoveCamera(2*gridScale, 10, -gridScale);
 	    break;
 	 case GLUT_KEY_F8:
 	    // move LookAt to in front of left shoulder
-	    _camera->MoveCamera(robotx-10, 10, robotz-5);
+	    _camera->MoveCamera(-2*gridScale, 10, -gridScale);
 	    break;
 	 case GLUT_KEY_F9:
 	    // F5 but far away
-	    _camera->MoveCamera(robotx-20, 20, robotz+20);
+	    _camera->MoveCamera(-4*gridScale, 20, 4*gridScale);
 	    break;
 	 case GLUT_KEY_F10:
 	    // F6 but far away
-	    _camera->MoveCamera(robotx+20, 20, robotz+20);
+	    _camera->MoveCamera(4*gridScale, 20, 4*gridScale);
 	    break;
 	 case GLUT_KEY_F11:
 	    // F7 but far away
-	    _camera->MoveCamera(robotx+20, 20, robotz-20);
+	    _camera->MoveCamera(4*gridScale, 20, -4*gridScale);
 	    break;
 	 case GLUT_KEY_F12:
 	    // F8 but far away
-	    _camera->MoveCamera(robotx-20, 20, robotz-20);
+	    _camera->MoveCamera(-4*gridScale, 20, -4*gridScale);
 	    break;	 
       }
    }		
+}
+
+void SpecialKeyUp(int key, int x, int y)
+{
+   _robot->ResetHead();
 }
 
 //
