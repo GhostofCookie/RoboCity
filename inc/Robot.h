@@ -6,7 +6,7 @@ class Robot
    Robot();
    ~Robot();
 
-   void Render();
+   void Render(int tick);
 
    struct Coord
    {
@@ -28,9 +28,17 @@ class Robot
    void MoveForward(float);
    const Coord ForwardVector();
 
+   bool IsMoving();
+
   private:
    Coord* _loc;
    Coord* _rot;
    float _angle, _head_angle, _antenna_angle;
+   float _xGoal = 0.0f, _xDelta = 0.0f;
+   float _zGoal = 0.0f, _zDelta = 0.0f;
+   float _legAngle = 0.0f, _legMove = 3.0f;
+   bool _isMoving = false;
+
+   void AnimateMovement(int tick);
 
 };
