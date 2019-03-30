@@ -58,6 +58,9 @@ void Building::Hit()
 		if (_health == 0)
 		{
 			// dead
+			R = 1.0f;
+			G = .2f;
+			B = .2f;
 			_isCollapsing = true;
 		}
 		else if (_health == 1)
