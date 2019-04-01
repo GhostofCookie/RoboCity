@@ -13,7 +13,7 @@ Building::Building(float centerx, float centerz, float w, float h, float d, Buil
 	Depth = d;
 	_ogHeight = h;
 
-	Destructable = true;
+	Destructible = true;
 	Type = bt;
 	switch (Type)
 	{
@@ -31,7 +31,7 @@ Building::Building(float centerx, float centerz, float w, float h, float d, Buil
 		break;
 	case Building::Indestructable:
 		_health = 1;
-		Destructable = false;
+		Destructible = false;
 		R = 0.101f;
 		G = 0.142f;
 		B = 0.183f;
@@ -54,7 +54,7 @@ void Building::Display(int tick)
 
 void Building::Hit()
 {
-	if (Destructable && !_isDead)
+	if (Destructible && !_isDead)
 	{
 		_health--;
 		if (_health == 0)

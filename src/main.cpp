@@ -359,7 +359,7 @@ void ProcessHits(GLint hits, GLuint buffer[])
 
 void Keyboard(unsigned char key, int x, int y)
 {
-   switch (key)
+   switch (tolower(key))
    {
       case 'q':
 	 //if at intersection, turn left

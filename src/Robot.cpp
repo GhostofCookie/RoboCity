@@ -41,7 +41,7 @@ void Robot::Render(int tick)
       glPushMatrix();
 
       glColor3f(0.f, 0.1f, 0.5f);
-      glRotatef(_antenna_angle, 0.f, 1.f, 0.f);
+      glRotatef(-_antenna_angle, 0.f, 1.f, 0.f);
 
       glPushMatrix();
       glTranslatef(0.f, 1.25f, 0.f);

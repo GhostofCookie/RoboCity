@@ -35,7 +35,7 @@ public:
 	float R;
 	float G;
 	float B;
-	bool Destructable;
+	bool Destructible;
 	void Draw();
 	void Collapse(int tick);
 	BuildingType Type;
