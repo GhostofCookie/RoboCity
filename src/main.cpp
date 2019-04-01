@@ -415,22 +415,20 @@ void SpecialKey(int key, int x, int y)
    float robotx = _robot->GetLocation().x;
    float robotz = _robot->GetLocation().z;
    if (pause == false) {
+      canFire = false;
       switch (key)
       {
 	 case GLUT_KEY_F1:
 	    // turn head of robot to face forward
 	    SpecialKeyUp(key, x, y);
-	    canFire = false;
 	    break;
 	 case GLUT_KEY_F2:
 	    // turn head of robot to the right (clockwise)
 	    _robot->RotateHead(-45.f);
-	    canFire = false;
 	    break;
 	 case GLUT_KEY_F3:
 	    // turn head of robot to the left (counterclockwise)
 	    _robot->RotateHead(45.f);
-	    canFire = false;
 	    break;
 	 case GLUT_KEY_F4:
 	    // reutrns LookAt view to default
@@ -441,42 +439,34 @@ void SpecialKey(int key, int x, int y)
 	 case GLUT_KEY_F5:
 	    // move LookAt to behind left shoulder
 	    _camera->MoveCamera(-2 * gridScale, 10, gridScale);
-	    canFire = false;
 	    break;
 	 case GLUT_KEY_F6:
 	    // move LookAt to behind right shoulder
 	    _camera->MoveCamera(2 * gridScale, 10, gridScale);
-	    canFire = false;
 	    break;
 	 case GLUT_KEY_F7:
 	    // move LookAt to in front of right shoulder
 	    _camera->MoveCamera(2 * gridScale, 10, -gridScale);
-	    canFire = false;
 	    break;
 	 case GLUT_KEY_F8:
 	    // move LookAt to in front of left shoulder
 	    _camera->MoveCamera(-2 * gridScale, 10, -gridScale);
-	    canFire = false;
 	    break;
 	 case GLUT_KEY_F9:
 	    // F5 but far away
 	    _camera->MoveCamera(-4 * gridScale, 20, 4 * gridScale);
-	    canFire = false;
 	    break;
 	 case GLUT_KEY_F10:
 	    // F6 but far away
 	    _camera->MoveCamera(4 * gridScale, 20, 4 * gridScale);
-	    canFire = false;
 	    break;
 	 case GLUT_KEY_F11:
 	    // F7 but far away
 	    _camera->MoveCamera(4 * gridScale, 20, -4 * gridScale);
-	    canFire = false;
 	    break;
 	 case GLUT_KEY_F12:
 	    // F8 but far away
 	    _camera->MoveCamera(-4 * gridScale, 20, -4 * gridScale);
-	    canFire = false;
 	    break;
       }
    }
