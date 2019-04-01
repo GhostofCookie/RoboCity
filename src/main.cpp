@@ -88,6 +88,7 @@ void init(void)
 
    // Enable depth testing.
    glEnable(GL_DEPTH_TEST);
+   glEnable(GL_NORMALIZE);
    glDepthFunc(GL_LESS);
 
    // Enable transparency.
@@ -98,15 +99,12 @@ void init(void)
    glEnable(GL_LIGHTING);
    glEnable(GL_LIGHT0);
 
-   GLfloat lpos[4] = { 100, 100, 100, 100 };
-   GLfloat white[4] = { 1.f, 1.f, 1.f, 1.f };
-   glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
-   glLightfv(GL_LIGHT0, GL_SPECULAR, white);
-   glLightfv(GL_LIGHT0, GL_POSITION, lpos);
-   glLightModelfv(GL_LIGHT_MODEL_AMBIENT, white);
    glEnable(GL_COLOR_MATERIAL);
 
    glShadeModel(GL_SMOOTH);
+
+   // Initialize camera placement.
+   _camera->MoveCamera(0, 1, gridScale);
 
    // City Generator info
    _city->CreateStreets_Simple();
@@ -198,8 +196,6 @@ void DrawObjects(GLenum mode)
 void Display()
 {
 
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
    float robotx = _robot->GetLocation().x;
    float robotz = _robot->GetLocation().z;
 
@@ -247,6 +243,15 @@ void Display()
 
    glFlush();
    glutSwapBuffers();
+   
+   GLfloat lpos[4] = { 100, 100, 100, 100 };
+   GLfloat white[4] = { 1.f, 1.f, 1.f, 1.f };
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+   glLightfv(GL_LIGHT0, GL_SPECULAR, white);
+   glLightfv(GL_LIGHT0, GL_POSITION, lpos);
+   glLightModelfv(GL_LIGHT_MODEL_AMBIENT, white);
+
 
    // Calculate frames per second
    _frameCount++;
@@ -433,7 +438,6 @@ void SpecialKey(int key, int x, int y)
 	 case GLUT_KEY_F4:
 	    // reutrns LookAt view to default
 	    _camera->MoveCamera(0, 1, gridScale);
-	    std::cout << robotz - 5 << std::endl;
 	    canFire = true;
 	    break;
 	 case GLUT_KEY_F5:
@@ -514,7 +518,7 @@ Building::BuildingType ChooseBuildingType()
 // This is what sets the fps to a hard value of the defined FPS
 void Idle(int)
 {
-   if(!pause)  glutPostRedisplay();
+   if(!pause) glutPostRedisplay();
    glutTimerFunc(1000 / FPS, Idle, 0);
 }
 
