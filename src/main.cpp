@@ -49,7 +49,7 @@ bool pause = false;
 bool selectReady = true;
 float worldOffset;
 float gridScale = 10.0;
-GLfloat _width = 780, _height = 500;
+GLfloat _width = 1000, _height = 700;
 
 std::vector<std::vector<Building>> buildings;
 Robot* _robot = new Robot();
@@ -104,7 +104,7 @@ void init(void)
    glShadeModel(GL_SMOOTH);
 
    // Initialize camera placement.
-   _camera->MoveCamera(0, 1, gridScale);
+   _camera->MoveCamera(0, 2, gridScale);
 
    // City Generator info
    _city->CreateStreets_Simple();
@@ -244,7 +244,7 @@ void Display()
    glFlush();
    glutSwapBuffers();
    
-   GLfloat lpos[4] = { 100, 100, 100, 100 };
+   GLfloat lpos[4] = { 5.f, 100, 10.f, 0.f };
    GLfloat white[4] = { 1.f, 1.f, 1.f, 1.f };
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
@@ -437,7 +437,7 @@ void SpecialKey(int key, int x, int y)
 	    break;
 	 case GLUT_KEY_F4:
 	    // reutrns LookAt view to default
-	    _camera->MoveCamera(0, 1, gridScale);
+	    _camera->MoveCamera(0, 2, gridScale);
 	    canFire = true;
 	    break;
 	 case GLUT_KEY_F5:
