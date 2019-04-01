@@ -38,10 +38,14 @@ public:
 	bool Destructable;
 	void Draw();
 	void Collapse(int tick);
+	BuildingType Type;
 
 	Building(float centerx, float centerz, float w, float h, float d, BuildingType bt);
 	void Display(int tick);
 	void Hit();
+	void DrawWeak();
+	void DrawStrong();
+	void DrawIndestructable();
 	float Left();
 	float Right();
 	float Bottom();
@@ -49,4 +53,5 @@ public:
 	float Back();
 	float Front();
 	bool IsDead();
+	void CalculateNormal(float x0, float y0, float z0, float x1, float y1, float z1, float x2, float y2, float z2);
 };

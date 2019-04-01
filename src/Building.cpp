@@ -4,6 +4,7 @@ Building::Building(float centerx, float centerz, float w, float h, float d, Buil
 {
 	cx = centerx;
 	cz = centerz;
+	// -0.5 for shifting the world down
 	cy = h / 2 - 0.5;
 
 
@@ -13,7 +14,8 @@ Building::Building(float centerx, float centerz, float w, float h, float d, Buil
 	_ogHeight = h;
 
 	Destructable = true;
-	switch (bt)
+	Type = bt;
+	switch (Type)
 	{
 	case Building::Weak:
 		_health = 1;
@@ -52,7 +54,7 @@ void Building::Display(int tick)
 
 void Building::Hit()
 {
-	if (Destructable)
+	if (Destructable && !_isDead)
 	{
 		_health--;
 		if (_health == 0)
@@ -119,9 +121,60 @@ bool Building::IsDead()
 // private functions
 void Building::Draw()
 {
-	glBegin(GL_QUADS);
-
 	glColor3f(R, G, B);
+
+	switch (Type)
+	{
+	case Building::Weak:
+		DrawWeak();
+		break;
+	case Building::Strong:
+		DrawStrong();
+		break;
+	case Building::Indestructable:
+		DrawIndestructable();
+		break;
+	default:
+		break;
+	}
+
+}
+
+//Pyramid
+void Building::DrawWeak()
+{
+	glBegin(GL_TRIANGLES);
+
+	// back
+	CalculateNormal(cx, Bottom(), cz, Right(), Bottom(), Back(), Left(), Top(), Back());
+	glVertex3f(cx, Top(), cz); // peak
+	glVertex3f(Right(), Bottom(), Back());
+	glVertex3f(Left(), Bottom(), Back());
+	
+	// left
+	CalculateNormal(cx, Top(), cz, Left(), Bottom(), Back(), Left(), Bottom(), Front());
+	glVertex3f(cx, Top(), cz); // peak
+	glVertex3f(Left(), Bottom(), Back());
+	glVertex3f(Left(), Bottom(), Front());
+	
+	// right
+	CalculateNormal(cx, Top(), cz, Right(), Bottom(), Front(), Right(), Bottom(), Back());
+	glVertex3f(cx, Top(), cz); // peak
+	glVertex3f(Right(), Bottom(), Front());
+	glVertex3f(Right(), Bottom(), Back());
+
+	// front
+	CalculateNormal(cx, Top(), cz, Right(), Bottom(), Front(), Left(), Bottom(), Front());
+	glVertex3f(cx, Top(), cz);
+	glVertex3f(Left(), Bottom(), Front());
+	glVertex3f(Right(), Bottom(), Front());
+	glEnd();
+}
+
+// Rectangles
+void Building::DrawStrong()
+{
+	glBegin(GL_QUADS);
 
 	// front side
 	glNormal3f(0.0f, 0.0f, 1.0f);
@@ -157,6 +210,85 @@ void Building::Draw()
 	glVertex3f(Left(), Top(), Back());
 	glVertex3f(Right(), Top(), Back());
 	glVertex3f(Right(), Bottom(), Back());
+
+	glEnd();
+}
+
+void Building::DrawIndestructable()
+{
+	float offset = 0.5;
+	float heightOff = 2.0;
+	glBegin(GL_QUADS);
+	// front side
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(Left(), Bottom(), Front());
+	glVertex3f(Right(), Bottom(), Front());
+	glVertex3f(Right() - offset, Top()/heightOff, Front() - offset);
+	glVertex3f(Left() + offset, Top()/heightOff, Front() - offset);
+
+	// right side
+	glNormal3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(Right(), Bottom(), Front());
+	glVertex3f(Right(), Bottom(), Back());
+	glVertex3f(Right() - offset, Top()/heightOff, Back() + offset);
+	glVertex3f(Right() - offset, Top()/heightOff, Front() - offset);
+
+	// Left side
+	glNormal3f(-1.0f, 0.0f, 0.0f);
+	glVertex3f(Left(), Bottom(), Back());
+	glVertex3f(Left(), Bottom(), Front());
+	glVertex3f(Left() + offset, Top()/heightOff, Front() - offset);
+	glVertex3f(Left() + offset, Top()/heightOff, Back() + offset);
+
+	// Top
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(Left() + offset, Top()/heightOff, Front() - offset);
+	glVertex3f(Right() - offset, Top()/heightOff, Front() - offset);
+	glVertex3f(Right() - offset, Top()/heightOff, Back() + offset);
+	glVertex3f(Left() + offset, Top()/heightOff, Back() + offset);
+
+	// Back side
+	glNormal3f(0.0f, 0.0f, -1.0f);
+	glVertex3f(Left(), Bottom(), Back());
+	glVertex3f(Left() + offset, Top()/heightOff, Back() + offset);
+	glVertex3f(Right() - offset, Top()/heightOff, Back() + offset);
+	glVertex3f(Right(), Bottom(), Back());
+
+	// second block
+	// front side
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(Left() + offset, Bottom(), Front() - offset);
+	glVertex3f(Right() - offset, Bottom(), Front() - offset);
+	glVertex3f(Right(), Top() / 3, Front());
+	glVertex3f(Left(), Top() / 3, Front());
+
+	// right side
+	glNormal3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(Right() - offset, Bottom(), Front() - offset);
+	glVertex3f(Right() - offset, Bottom(), Back() + offset);
+	glVertex3f(Right(), Top() / 3, Back());
+	glVertex3f(Right(), Top() / 3, Front());
+
+	// Left side
+	glNormal3f(-1.0f, 0.0f, 0.0f);
+	glVertex3f(Left() + offset, Bottom(), Back() + offset);
+	glVertex3f(Left() + offset, Bottom(), Front() - offset);
+	glVertex3f(Left(), Top() / 3, Front());
+	glVertex3f(Left(), Top() / 3, Back());
+
+	// Top
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(Left(), Top() / 3, Front());
+	glVertex3f(Right(), Top() / 3, Front());
+	glVertex3f(Right(), Top() / 3, Back());
+	glVertex3f(Left(), Top() / 3, Back());
+
+	// Back side
+	glNormal3f(0.0f, 0.0f, -1.0f);
+	glVertex3f(Left() + offset, Bottom(), Back() + offset);
+	glVertex3f(Left(), Top() / 3, Back());
+	glVertex3f(Right(), Top() / 3, Back());
+	glVertex3f(Right() - offset, Bottom(), Back() + offset);
 
 	glEnd();
 }
@@ -205,4 +337,13 @@ void Building::Collapse(int tick)
 	}
 
 	cy = Height / 2 - 0.5;
+}
+
+
+void Building::CalculateNormal(float x0, float y0, float z0, float x1, float y1, float z1, float x2, float y2, float z2)
+{
+	float nx = (y1 - y0)*(z2 - z0) - (z1 - z0)*(y2 - y0);
+	float ny = -((x1 - x0)*(z2 - z0) - (z1 - z0)*(x2 - x0));
+	float nz = (x1 - x0)*(y2 - y0) - (y1 - y0)*(x2 - x0);
+	glNormal3f(nx, ny, nz);
 }
