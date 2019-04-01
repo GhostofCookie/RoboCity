@@ -54,7 +54,7 @@ GLfloat _width = 1000, _height = 700;
 std::vector<std::vector<Building>> buildings;
 Robot* _robot = new Robot();
 Camera* _camera = new Camera(_robot);
-StreetGenerator* _city = new StreetGenerator(2, gridScale, gridScale);
+StreetGenerator* _city = new StreetGenerator(20, gridScale, gridScale);
 
 int main(int argc, char** argv)
 {
