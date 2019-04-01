@@ -293,7 +293,7 @@ void Mouse(int button, int state, int x, int y)
 		  glMatrixMode(GL_PROJECTION);
 		  glPushMatrix();
 		  glLoadIdentity();
-		  gluPickMatrix((GLdouble)x, (GLdouble)(viewport[3] - y), 1.f, 1.f, viewport);
+		  gluPickMatrix((GLdouble)x, (GLdouble)(viewport[3] - y), .1f, .1f, viewport);
 		  gluPerspective(45.f, _width / _height, 0.01, 1000);
 		  DrawObjects(GL_SELECT);
 		  glMatrixMode(GL_PROJECTION);
@@ -423,7 +423,7 @@ void SpecialKey(int key, int x, int y)
    float robotx = _robot->GetLocation().x;
    float robotz = _robot->GetLocation().z;
    if (pause == false) {
-      canFire = false;
+      canFire = true;
       switch (key)
       {
 	 case GLUT_KEY_F1:
