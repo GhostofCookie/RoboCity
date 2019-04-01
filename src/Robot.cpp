@@ -56,6 +56,7 @@ void Robot::Render(int tick)
       glPushMatrix();
       glTranslatef(0.f, 1.25f, 0.f);
       glScalef(2.f, 0.5f, 0.5f);
+      
       glutSolidCube(0.1f);
       glPopMatrix();
 
@@ -67,7 +68,7 @@ void Robot::Render(int tick)
    //////////////////////////////////
    {
       glPushMatrix();
-      glColor3f(0.1f, 0.1f, 0.1f);
+      glColor3f(0.512f/2, 0.535f/2, 0.586f/2);
       glTranslatef(0.f, 0.8f, 0.f);
       glRotatef(_head_angle, 0.f, 1.f, 0.f);
       glTranslatef(0.f, -1.2f, 0.f);
@@ -79,7 +80,7 @@ void Robot::Render(int tick)
       //////////////////////////////////
       {
 	 // Eye Colour
-	 glColor3f(0.3f, 0.f, 0.03f);
+	 glColor3f(0.8f, 0.f, 0.03f);
 	 glPushMatrix();
 	 {
 	    glTranslatef(-0.15f, 0.f, 0.2f);
@@ -103,7 +104,7 @@ void Robot::Render(int tick)
    //////////////////////////////////
    {
       glPushMatrix();
-      glColor3f(1.f, 0.2f, 0.5f);
+      glColor3f(0.512f/2, 0.535f/2, 0.586f/2);
       glTranslatef(0.f, 0.6f, 0.f);
       glRotatef(90.f, 1.f, 0.f, 0.f);
       glTranslatef(0.f, -1.f, 0.f);
@@ -125,7 +126,7 @@ void Robot::Render(int tick)
 
       // Front Decal
       {
-	 glColor3f(0.102f, 0.734f, 0.609f);
+	 glColor3f(0.195f, 0.996f, 0.492f);
 	 glNormal3f(0.f, 0.f, 0.f);
 	 glVertex3f(-bw / 2 + 0.1, bh / 2 - 0.1, bw / 2 + 0.01);
 	 glVertex3f(-bw / 2 + 0.1, -bh / 2 + 0.1, bw / 2 + 0.01);
@@ -134,7 +135,7 @@ void Robot::Render(int tick)
       }
 
       // Front/Back Colour
-      glColor3f(0.555f, 0.266f, 0.656f);
+      glColor3f(0.164f, 0.203f, 0.223f);
 
       // Forward Face
       glNormal3f(0.f, 0.f, 1.f);
@@ -151,7 +152,7 @@ void Robot::Render(int tick)
       glVertex3f(bw / 2, -bh / 2, -bw / 2);
 
       // Side Colour
-      glColor3f(0.f, 0.5f, 0.7f);
+      glColor3f(0.164f, 0.203f, 0.223f);
 
       // Right Face
       glNormal3f(1.f, 0.f, 0.f);
@@ -168,8 +169,7 @@ void Robot::Render(int tick)
       glVertex3f(bw / 2, bh / 2, -bw / 2);
 
       // Top and Bottom
-      glColor3f(0.5f, 0.f, 1.f);
-
+      glColor3f(0.164f, 0.203f, 0.223f);
       // Top Face
       glNormal3f(0.f, 1.f, 0.f);
       glVertex3f(-bw / 2, bh / 2, bw / 2);
@@ -214,7 +214,7 @@ void Robot::Render(int tick)
    // Legs
    //////////////////////////////////
    {
-      glColor3f(0.f, 0.5f, 0.1f);
+      glColor3f(0.512f/2, 0.535f/2, 0.586f/2);
 
       glPushMatrix();
       glTranslatef(-0.15f, -0.8f, 0.f);

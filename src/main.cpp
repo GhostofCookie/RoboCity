@@ -54,7 +54,7 @@ GLfloat _width = 1000, _height = 700;
 std::vector<std::vector<Building>> buildings;
 Robot* _robot = new Robot();
 Camera* _camera = new Camera(_robot);
-StreetGenerator* _city = new StreetGenerator(20, gridScale, gridScale);
+StreetGenerator* _city = new StreetGenerator(2, gridScale, gridScale);
 
 int main(int argc, char** argv)
 {
@@ -195,6 +195,10 @@ void DrawObjects(GLenum mode)
 
 void Display()
 {
+   GLfloat mat_spec[4] = { 0.1f, 0.1f, 0.1f, 1.f }, shine[] = {128.f};
+   
+   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_spec);
+   glMaterialfv(GL_FRONT, GL_SHININESS, shine);
 
    float robotx = _robot->GetLocation().x;
    float robotz = _robot->GetLocation().z;
@@ -244,15 +248,14 @@ void Display()
    glFlush();
    glutSwapBuffers();
    
-   GLfloat lpos[4] = { 5.f, 100, 10.f, 0.f };
-   GLfloat white[4] = { 1.f, 1.f, 1.f, 1.f };
+   GLfloat lpos[4] = { 80.f, 100, 100.f, 0.f };
+   GLfloat white[4] = { 1.5f, 1.5f, 1.5f, 1.f };
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
    glLightfv(GL_LIGHT0, GL_SPECULAR, white);
    glLightfv(GL_LIGHT0, GL_POSITION, lpos);
    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, white);
-
-
+   
    // Calculate frames per second
    _frameCount++;
    _curTime = time(NULL);
