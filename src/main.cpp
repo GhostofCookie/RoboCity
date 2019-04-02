@@ -269,7 +269,7 @@ void Display()
 
 void Mouse(int button, int state, int x, int y)
 {
-   if(canFire)
+   if(canFire && !pause)
    {
       switch (button)
       {
